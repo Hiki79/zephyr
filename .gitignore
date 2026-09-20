@@ -4,5 +4,6 @@ src-tauri/target/
 src-tauri/gen/
 src-tauri/binaries/
 design/shot-*.png
+design/zephyr-screens.png
 .DS_Store
 *.local
