@@ -50,8 +50,14 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   user-select: none;
+  -webkit-user-select: none;
   cursor: default;
 }
+
+/* Dragging across the chrome (sidebar, titlebar, cards) must never start a
+   text selection or a native element drag; only .sel-text and inputs opt in. */
+.app, .nav, .titlebar, .page { -webkit-user-select: none; user-select: none; }
+img, svg, .nav-mark { -webkit-user-drag: none; user-select: none; }
 
 button, input, select { font: inherit; color: inherit; }
 button { background: none; border: 0; padding: 0; cursor: pointer; }
@@ -78,7 +84,10 @@ a { color: var(--blue-dark); }
 /* ============================================================
    Shell
    ============================================================ */
-.app { display: grid; grid-template-columns: 208px minmax(0, 1fr); height: 100%; }
+/* The row must be height-bounded (minmax(0,1fr)), not content-sized, or a page
+   taller than the window grows .main past the viewport and .page never becomes
+   the scroll container — which is why the wheel did nothing on long lists. */
+.app { display: grid; grid-template-columns: 208px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); height: 100%; }
 
 .nav {
   display: flex;
@@ -136,7 +145,7 @@ a { color: var(--blue-dark); }
   color: rgba(255, 255, 255, 0.5);
 }
 
-.main { display: flex; flex-direction: column; min-width: 0; background: var(--paper); }
+.main { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--paper); }
 
 .titlebar {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
@@ -402,10 +411,31 @@ select.picker:disabled { color: var(--faint); cursor: default; }
 .group-item:hover { background: var(--hover); }
 .group-item.on { background: var(--blue-pale); border-color: var(--blue-line); }
 .group-item-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.group-item-name { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-item-name { flex: 1; min-width: 0; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .group-item.on .group-item-name { color: var(--blue-dark); }
 .group-item-sub { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.group-item-ms { font-size: 11.5px; font-variant-numeric: tabular-nums; }
+/* Delay shown as a liquid blue-white glass pill; the pill's tint carries the
+   latency health, so the coloured dot inside it is hidden. */
+.group-item-ms {
+  height: 20px; padding: 0 9px; border-radius: 999px; flex: none;
+  font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #ffffff, #e7edff);
+  border: 1px solid var(--blue-line);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 1.5px rgba(21, 25, 34, 0.06);
+  color: #2148c9;
+}
+.group-item-ms .dot { display: none; }
+.group-item-ms.mid {
+  background: linear-gradient(180deg, #fffaf0, #ffe7c2);
+  border-color: #f0cd8c; color: #b5701a;
+}
+.group-item-ms.bad {
+  background: linear-gradient(180deg, #fff3f3, #ffd6d6); border-color: #f0b4b4; color: var(--red);
+}
+.group-item-ms.none {
+  background: linear-gradient(180deg, #ffffff, #eceef2); border-color: var(--line-dark); color: var(--faint);
+}
+.group-item.on .group-item-ms { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95); }
 
 .region { border-top: 1px solid var(--line-in); }
 .region:first-child { border-top: 0; }
@@ -418,13 +448,14 @@ select.picker:disabled { color: var(--faint); cursor: default; }
 .region-meta { margin-left: auto; font-size: 11.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
 .node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 7px; padding: 0 18px 14px; }
 .node {
-  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px;
   padding: 8px 11px; text-align: left; min-width: 0;
   border: 1px solid var(--line); border-radius: var(--radius-sm); background: #fff;
 }
+.node > span:first-child { min-width: 0; overflow: hidden; }
 .node:hover { border-color: var(--line-dark); background: #fafaf7; }
 .node.on { border-color: var(--blue); background: var(--blue-pale); box-shadow: inset 0 0 0 1px var(--blue); }
-.node-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node-name { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .node.on .node-name { font-weight: 600; color: var(--blue-dark); }
 .node-meta { font-size: 11px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .node-ms { font-size: 11.5px; font-variant-numeric: tabular-nums; text-align: right; }
