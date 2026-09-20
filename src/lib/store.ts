@@ -215,6 +215,16 @@ export const useStore = create<State>((set, get) => ({
       get().refreshSettings();
     });
 
+    // The tray can change proxy / TUN / mode; keep the window in step.
+    listen<Settings>("zephyr://settings", (event) => {
+      if (event.payload) set({ settings: event.payload });
+      get().refreshStatus();
+    });
+
+    listen<{ text: string; kind: "ok" | "err" }>("zephyr://toast", (event) => {
+      if (event.payload?.text) get().toast(event.payload.text, event.payload.kind ?? "ok");
+    });
+
     listen("zephyr://core", () => {
       get().refreshStatus();
       get().refreshProxies();

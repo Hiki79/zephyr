@@ -3,6 +3,7 @@ mod mihomo;
 mod profiles;
 mod settings;
 mod sysproxy_win;
+mod tray;
 
 use crate::core::CoreManager;
 use crate::mihomo::Mihomo;
@@ -130,11 +131,13 @@ fn get_settings(state: State<'_, AppState>) -> Settings {
 /// core restart is done live; only the flags that live in the config file
 /// (TUN, ports, LAN) force a restart.
 #[tauri::command]
-async fn patch_settings(
-    app: AppHandle,
-    state: State<'_, AppState>,
-    patch: Value,
-) -> Result<Settings, String> {
+async fn patch_settings(app: AppHandle, patch: Value) -> Result<Settings, String> {
+    apply_settings_patch(&app, patch).await
+}
+
+/// The body of `patch_settings`, also called by the tray menu.
+pub async fn apply_settings_patch(app: &AppHandle, patch: Value) -> Result<Settings, String> {
+    let state = app.state::<AppState>();
     let before = state.snapshot_settings();
 
     let merged: Settings = {
@@ -159,7 +162,7 @@ async fn patch_settings(
         || merged.log_level != before.log_level;
 
     if needs_restart {
-        restart_core_inner(&app, &state).await?;
+        restart_core_inner(app, &state).await?;
     } else if merged.mode != before.mode {
         // Mode is hot-swappable through the API.
         state.client().patch_mode(&merged.mode).await.map_err(err)?;
@@ -173,6 +176,7 @@ async fn patch_settings(
     }
 
     let _ = app.emit("zephyr://settings", &merged);
+    tray::sync(app);
     Ok(merged)
 }
 
@@ -568,6 +572,22 @@ pub fn run() {
                 core: Mutex::new(CoreManager::default()),
             });
 
+            // Tray icon and menu. Must come after the state is managed, since
+            // the tray reads settings to draw its checkmarks.
+            tray::build(app.handle())?;
+
+            // Closing the window hides it to the tray; quitting is done from the
+            // tray menu, so the core keeps running in the background.
+            if let Some(window) = app.get_webview_window("main") {
+                let win = window.clone();
+                window.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        let _ = win.hide();
+                    }
+                });
+            }
+
             // Boot the core, then bring the system proxy back if it was on.
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
@@ -616,6 +636,7 @@ pub fn run() {
                     let _ = sysproxy_win::apply(true, settings.mixed_port, &settings.bypass);
                 }
                 let _ = handle.emit("zephyr://core", true);
+                tray::sync(&handle);
             });
 
             spawn_stream_bridge(app.handle().clone(), "/traffic", "zephyr://traffic");
