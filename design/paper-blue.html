@@ -1,0 +1,1936 @@
+<!doctype html>
+<html lang="en" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Zephyr Blue Paper</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Zephyr Blue Paper" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot; data-visualize-standalone&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Zephyr Blue Paper&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive &gt; .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align=&quot;right&quot;]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align=&quot;center&quot;]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled=&quot;true&quot;]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled=&quot;true&quot;] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed=&quot;true&quot;],
+  [aria-selected=&quot;true&quot;],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type=&quot;file&quot;]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type=&quot;color&quot;] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type=&quot;date&quot;],
+    [type=&quot;datetime-local&quot;],
+    [type=&quot;month&quot;],
+    [type=&quot;time&quot;],
+    [type=&quot;week&quot;]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: &quot;&quot;;
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id=&quot;paper-blue&quot; aria-label=&quot;Zephyr 蓝白纸面风界面设计稿&quot;&gt;
+  &lt;style&gt;
+    #paper-blue {
+      --paper-blue: #3157f4;
+      --paper-blue-dark: #2341bf;
+      --paper-blue-pale: #e9edff;
+      --paper-paper: #fbfbf8;
+      --paper-ground: #e9e8e2;
+      --paper-ink: #151922;
+      --paper-muted: #676e7b;
+      --paper-line: #dfe1e6;
+      --paper-line-dark: #b6bdce;
+      --paper-green: #16854d;
+      --paper-orange: #d97828;
+      --paper-radius: 9px;
+      --paper-font: &quot;Segoe UI Variable Text&quot;, &quot;Segoe UI&quot;, &quot;PingFang SC&quot;, &quot;Microsoft YaHei UI&quot;, &quot;Microsoft YaHei&quot;, sans-serif;
+      width: 100%;
+      color: var(--paper-ink);
+      font-family: var(--paper-font);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #paper-blue *, #paper-blue *::before, #paper-blue *::after { box-sizing: border-box; }
+    #paper-blue button, #paper-blue input { font: inherit; }
+    #paper-blue h1, #paper-blue h2, #paper-blue h3, #paper-blue p { margin: 0; }
+    #paper-blue [hidden] { display: none !important; }
+    #paper-blue button { cursor: pointer; }
+    #paper-blue button:focus-visible, #paper-blue input:focus-visible { outline: 2px solid var(--paper-blue); outline-offset: 3px; }
+    #paper-blue .paper-window {
+      position: relative;
+      display: grid;
+      grid-template-columns: 186px minmax(0, 1fr);
+      width: min(1180px, 100%);
+      min-height: 720px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid #d7dce8;
+      border-radius: calc(var(--paper-radius) + 5px);
+      background: var(--paper-paper);
+      box-shadow: none;
+    }
+    #paper-blue .paper-nav {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      padding: 27px 16px 23px;
+      color: #fff;
+      background: var(--paper-blue);
+    }
+    #paper-blue .paper-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 7px;
+      letter-spacing: -.045em;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    #paper-blue .paper-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      color: var(--paper-blue);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.06em;
+      flex: none;
+      border-radius: 6px;
+    }
+    #paper-blue .paper-nav-rule { height: 1px; margin: 26px 7px 22px; background: rgba(255,255,255,.35); }
+    #paper-blue .paper-nav-label { margin: 0 7px 11px; color: rgba(255,255,255,.65); font-size: 10px; letter-spacing: .18em; }
+    #paper-blue .paper-nav-list { display: grid; gap: 8px; }
+    #paper-blue .paper-nav-btn {
+      display: grid;
+      grid-template-columns: 18px minmax(0,1fr) 18px;
+      min-height: 45px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border: 0;
+      color: rgba(255,255,255,.82);
+      background: transparent;
+      text-align: left;
+      border-radius: 6px;
+    }
+    #paper-blue .paper-nav-btn:hover { color: #fff; background: rgba(255,255,255,.12); }
+    #paper-blue .paper-nav-btn.is-active { color: var(--paper-ink); background: #fff; }
+    #paper-blue .paper-nav-num { display: none; font-family: ui-monospace, Consolas, monospace; font-size: 11px; opacity: .7; }
+    #paper-blue .paper-nav-btn.is-active .paper-nav-num { color: var(--paper-blue); opacity: 1; }
+    #paper-blue .paper-nav-icon { display: grid; place-items: center; width: 18px; }
+    #paper-blue .paper-nav-icon svg { width: 16px; height: 16px; stroke-width: 1.6; }
+    #paper-blue .paper-nav-arrow { font-size: 17px; opacity: .7; }
+    #paper-blue .paper-nav-bottom { margin-top: auto; display: grid; gap: 18px; padding: 23px 7px 0; }
+    #paper-blue .paper-nav-foot { display: flex; justify-content: space-between; color: rgba(255,255,255,.65); font-size: 11px; }
+    #paper-blue .paper-nav-foot strong { color: #fff; font-weight: 500; }
+    #paper-blue .paper-nav-stamp { padding-top: 17px; border-top: 1px solid rgba(255,255,255,.35); color: rgba(255,255,255,.78); font-size: 11px; letter-spacing: .04em; line-height: 1.9; }
+
+    #paper-blue .paper-workspace { display: grid; min-width: 0; grid-template-rows: 54px minmax(0, 1fr); background: var(--paper-paper); }
+    #paper-blue .paper-topbar { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 16px; padding: 0 26px; border-bottom: 1px solid var(--paper-line); }
+    #paper-blue .paper-top-meta { display: flex; min-width: 0; align-items: center; gap: 12px; color: var(--paper-muted); font-size: 11px; letter-spacing: .04em; }
+    #paper-blue .paper-live { display: inline-flex; align-items: center; gap: 6px; color: var(--paper-green); font-weight: 600; }
+    #paper-blue .paper-live-dot { width: 6px; height: 6px; background: var(--paper-green); }
+    #paper-blue .paper-top-actions { display: flex; align-items: center; gap: 1px; }
+    #paper-blue .paper-window-btn { display: grid; width: 30px; height: 28px; place-items: center; border: 0; color: var(--paper-muted); background: transparent; }
+    #paper-blue .paper-window-btn:hover { color: var(--paper-ink); background: var(--paper-blue-pale); }
+    #paper-blue .paper-window-btn svg { width: 14px; height: 14px; }
+    #paper-blue .paper-window-btn.close:hover { color: #fff; background: #d73b49; }
+
+    #paper-blue .paper-page {
+      position: relative;
+      min-width: 0;
+      padding: 32px 32px 26px;
+      overflow: visible;
+      background-color: var(--paper-paper);
+      background-image: none;
+    }
+    #paper-blue .paper-page::after { position: absolute; top: 23px; right: 26px; width: 8px; height: 8px; border-top: 1px solid var(--paper-blue); border-right: 1px solid var(--paper-blue); content: &quot;&quot;; }
+    #paper-blue .paper-page-header { display: flex; min-width: 0; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 30px; }
+    #paper-blue .paper-kicker { display: flex; align-items: center; gap: 10px; color: var(--paper-blue); font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+    #paper-blue .paper-kicker-line { width: 35px; height: 2px; background: currentColor; }
+    #paper-blue .paper-heading { margin-top: 10px; letter-spacing: -.04em; font-size: 32px; font-weight: 500; line-height: 1.3; }
+    #paper-blue .paper-subheading { max-width: 420px; margin-top: 9px; color: var(--paper-muted); font-size: 13px; }
+    #paper-blue .paper-date { align-self: start; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 11px; line-height: 1.8; text-align: right; white-space: nowrap; }
+    #paper-blue .paper-date strong { display: block; color: var(--paper-ink); font-size: 14px; font-weight: 500; }
+
+    #paper-blue .paper-overview-grid { display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(220px, .72fr); gap: 17px; }
+    #paper-blue .paper-hero { min-width: 0; min-height: 270px; padding: 24px 25px 16px; border-radius: var(--paper-radius); color: #fff; background: var(--paper-blue); }
+    #paper-blue .paper-hero-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    #paper-blue .paper-hero-label { font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .16em; opacity: .72; }
+    #paper-blue .paper-hero-index { font-family: ui-monospace, Consolas, monospace; font-size: 11px; opacity: .72; }
+    #paper-blue .paper-hero h2 { margin: 18px 0 27px; letter-spacing: -.03em; font-size: 27px; font-weight: 500; line-height: 1.1; }
+    #paper-blue .paper-hero-bottom { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 20px; }
+    #paper-blue .paper-hero-stat { display: grid; gap: 2px; }
+    #paper-blue .paper-hero-stat-label { color: rgba(255,255,255,.68); font-size: 11px; }
+    #paper-blue .paper-hero-stat-value { letter-spacing: -.05em; font-family: &quot;Segoe UI&quot;, sans-serif; font-size: 36px; font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #paper-blue .paper-unit { margin-left: 4px; letter-spacing: 0; font-size: 11px; font-weight: 400; opacity: .72; }
+    #paper-blue .paper-chart { width: 100%; height: 68px; margin-top: 7px; overflow: visible; }
+    #paper-blue .paper-chart-grid { stroke: rgba(255,255,255,.2); stroke-width: 1; }
+    #paper-blue .paper-chart-line { fill: none; stroke: #fff; stroke-width: 2.3; stroke-linejoin: round; stroke-linecap: round; }
+    #paper-blue .paper-chart-fill { fill: rgba(255,255,255,.16); }
+    #paper-blue .paper-chart-label { fill: rgba(255,255,255,.6); font-family: ui-monospace, Consolas, monospace; font-size: 9px; }
+    #paper-blue .paper-note { display: grid; min-width: 0; min-height: 259px; align-content: space-between; padding: 22px 22px 19px; border: 1px solid var(--paper-line); border-radius: var(--paper-radius); background: #fff; box-shadow: 0 3px 0 #eeefed; }
+    #paper-blue .paper-note-top { display: flex; align-items: center; justify-content: space-between; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .1em; }
+    #paper-blue .paper-note-mark { width: 24px; height: 24px; border: 1px solid var(--paper-blue); color: var(--paper-blue); font-size: 12px; text-align: center; line-height: 22px; }
+    #paper-blue .paper-note-number { margin-top: 18px; color: var(--paper-blue); letter-spacing: -.075em; font-family: &quot;Segoe UI&quot;,sans-serif; font-size: 76px; font-weight: 300; line-height: .95; }
+    #paper-blue .paper-note-title { margin-top: 7px; font-size: 15px; font-weight: 600; }
+    #paper-blue .paper-note-copy { margin-top: 3px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-note-foot { display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--paper-line); color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+
+    #paper-blue .paper-rule { height: 1px; margin: 27px 0 19px; background: var(--paper-line-dark); }
+    #paper-blue .paper-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; margin-bottom: 12px; }
+    #paper-blue .paper-section-head h3 { font-size: 16px; font-weight: 600; }
+    #paper-blue .paper-section-label { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .1em; }
+    #paper-blue .paper-route-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(235px, .82fr); gap: 17px; }
+    #paper-blue .paper-route { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-width: 0; min-height: 104px; padding: 16px; border: 1px solid var(--paper-line); border-radius: var(--paper-radius); background: #fff; }
+    #paper-blue .paper-route-icon { display: grid; width: 42px; height: 42px; border-radius: 8px; place-items: center; color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-route-icon svg { width: 20px; height: 20px; }
+    #paper-blue .paper-route-label { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .09em; }
+    #paper-blue .paper-route-name { margin-top: 3px; font-size: 16px; font-weight: 600; }
+    #paper-blue .paper-route-sub { margin-top: 3px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-route-ms { align-self: start; color: var(--paper-green); font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    #paper-blue .paper-toggle-line { display: flex; min-height: 104px; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-top: 1px solid var(--paper-line-dark); border-bottom: 1px solid var(--paper-line-dark); background: transparent; }
+    #paper-blue .paper-toggle-copy { display: grid; gap: 3px; }
+    #paper-blue .paper-toggle-title { font-size: 14px; font-weight: 600; }
+    #paper-blue .paper-toggle-sub { color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-switch { position: relative; flex: 0 0 auto; width: 43px; height: 24px; border: 0; border-radius: 20px; background: var(--paper-line-dark); }
+    #paper-blue .paper-switch::after { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; content: &quot;&quot;; transition: transform 160ms ease; }
+    #paper-blue .paper-switch.is-on { background: var(--paper-blue); }
+    #paper-blue .paper-switch.is-on::after { transform: translateX(19px); }
+    #paper-blue .paper-bottomline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 23px; color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-bottomline strong { color: var(--paper-ink); font-weight: 500; }
+
+    #paper-blue .paper-proxy-layout { display: grid; grid-template-columns: 157px minmax(0, 1fr); gap: 22px; }
+    #paper-blue .paper-group-list { border-top: 1px solid var(--paper-ink); }
+    #paper-blue .paper-group { display: grid; width: 100%; grid-template-columns: minmax(0,1fr) auto; gap: 3px 10px; min-height: 62px; align-content: center; padding: 10px; border: 0; border-bottom: 1px solid var(--paper-line); border-left: 3px solid transparent; background: transparent; text-align: left; }
+    #paper-blue .paper-group:hover { background: var(--paper-blue-pale); }
+    #paper-blue .paper-group.is-active { border-left-color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-group-name { font-size: 13px; font-weight: 600; }
+    #paper-blue .paper-group-count { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-group-node { grid-column: 1 / -1; overflow: hidden; color: var(--paper-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    #paper-blue .paper-group-node::before { display: inline-block; width: 5px; height: 5px; margin: 0 6px 2px 0; background: var(--paper-green); content: &quot;&quot;; }
+    #paper-blue .paper-proxy-main { min-width: 0; }
+    #paper-blue .paper-proxy-head { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 18px; padding-bottom: 17px; border-bottom: 1px solid var(--paper-line-dark); }
+    #paper-blue .paper-proxy-title { display: flex; align-items: baseline; gap: 10px; }
+    #paper-blue .paper-proxy-title h2 { letter-spacing: -.04em; font-size: 25px; font-weight: 500; }
+    #paper-blue .paper-proxy-title span { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+    #paper-blue .paper-proxy-sub { margin-top: 5px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-proxy-actions { display: flex; align-items: center; gap: 7px; }
+    #paper-blue .paper-action { display: inline-flex; min-height: 32px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--paper-line); border-radius: 5px; color: var(--paper-ink); background: #fff; font-size: 12px; }
+    #paper-blue .paper-action:hover { color: #fff; border-color: var(--paper-blue); background: var(--paper-blue); }
+    #paper-blue .paper-action svg { width: 14px; height: 14px; }
+    #paper-blue .paper-search-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 0 19px; }
+    #paper-blue .paper-search { display: flex; min-width: 180px; flex: 1; align-items: center; gap: 8px; padding: 0 11px; border-bottom: 1px solid var(--paper-line-dark); background: #fff; }
+    #paper-blue .paper-search svg { width: 15px; height: 15px; color: var(--paper-muted); }
+    #paper-blue .paper-search input { min-width: 0; width: 100%; height: 34px; border: 0; color: var(--paper-ink); background: transparent; font-size: 12px; }
+    #paper-blue .paper-search input::placeholder { color: var(--paper-muted); }
+    #paper-blue .paper-order { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; white-space: nowrap; }
+    #paper-blue .paper-region { margin-bottom: 22px; }
+    #paper-blue .paper-region-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+    #paper-blue .paper-region-code { color: var(--paper-blue); font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; }
+    #paper-blue .paper-region-name { font-size: 13px; font-weight: 600; }
+    #paper-blue .paper-region-count { color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-region-avg { margin-left: auto; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 7px; }
+    #paper-blue .paper-node { display: grid; min-width: 0; min-height: 66px; align-content: center; gap: 6px; padding: 10px 12px; border: 1px solid var(--paper-line); border-radius: 5px; color: var(--paper-ink); background: #fff; text-align: left; transition: background 140ms,border-color 140ms; }
+    #paper-blue .paper-node:hover { border-color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-node.is-selected { color: #fff; border-color: var(--paper-blue); background: var(--paper-blue); }
+    #paper-blue .paper-node-name { overflow: hidden; font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    #paper-blue .paper-node-meta { display: flex; justify-content: space-between; gap: 6px; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-node.is-selected .paper-node-meta { color: rgba(255,255,255,.72); }
+    #paper-blue .paper-node-meta strong { color: var(--paper-green); font-weight: 500; }
+    #paper-blue .paper-node.is-selected .paper-node-meta strong { color: #fff; }
+    #paper-blue .paper-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 26px; padding-top: 13px; border-top: 1px solid var(--paper-line-dark); color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-mode { display: flex; gap: 4px; margin-top: 13px; }
+    #paper-blue .paper-mode button { padding: 6px 14px; border: 1px solid transparent; border-radius: 5px; color: var(--paper-muted); background: transparent; font-size: 12px; }
+    #paper-blue .paper-mode button[aria-pressed=&quot;true&quot;] { color: var(--paper-blue); border-color: #d5dcfb; background: #fff; }
+    #paper-blue .paper-overview-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 17px; }
+    #paper-blue .paper-tun { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-left: 24px; border-left: 1px solid var(--paper-line); }
+    #paper-blue .paper-notice { min-height: 18px; margin-top: 12px; color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-empty { padding: 25px 0; color: var(--paper-muted); font-size: 13px; }
+    #paper-blue.paper-is-compact .paper-page { padding: 24px; }
+    #paper-blue.paper-is-compact .paper-node { min-height: 54px; }
+
+    #paper-blue .paper-screen[hidden] { display: none; }
+    @media (max-width: 850px) {
+      #paper-blue .paper-window { grid-template-columns: 72px minmax(0, 1fr); }
+      #paper-blue .paper-nav { padding: 22px 12px; }
+      #paper-blue .paper-brand { justify-content: center; padding: 0; }
+      #paper-blue .paper-brand-text, #paper-blue .paper-nav-label, #paper-blue .paper-nav-btn &gt; :not(.paper-nav-icon):not(.paper-nav-num), #paper-blue .paper-nav-foot, #paper-blue .paper-nav-stamp { display: none; }
+      #paper-blue .paper-nav-rule { margin: 24px 0 20px; }
+      #paper-blue .paper-nav-btn { grid-template-columns: 1fr; justify-items: center; padding: 0; }
+      #paper-blue .paper-nav-num { display: none; }
+      #paper-blue .paper-nav-icon svg { width: 18px; height: 18px; }
+      #paper-blue .paper-page { padding: 31px 24px; }
+      #paper-blue .paper-overview-grid { grid-template-columns: minmax(0,1.4fr) minmax(188px,.7fr); }
+      #paper-blue .paper-route-grid { grid-template-columns: 1fr; }
+      #paper-blue .paper-date { display: none; }
+    }
+    @media (max-width: 620px) {
+      #paper-blue .paper-window { display: block; min-height: 0; }
+      #paper-blue .paper-nav { display: block; padding: 12px; }
+      #paper-blue .paper-brand { justify-content: flex-start; }
+      #paper-blue .paper-brand-text { display: inline; }
+      #paper-blue .paper-nav-rule, #paper-blue .paper-nav-label, #paper-blue .paper-nav-bottom { display: none; }
+      #paper-blue .paper-nav-list { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+      #paper-blue .paper-nav-btn { grid-template-columns: 21px 1fr auto; min-height: 36px; justify-items: start; padding: 0 9px; }
+      #paper-blue .paper-nav-btn &gt; :not(.paper-nav-icon):not(.paper-nav-num) { display: block; }
+      #paper-blue .paper-nav-num { display: none; }
+      #paper-blue .paper-workspace { display: block; }
+      #paper-blue .paper-topbar { height: 45px; padding: 0 14px; }
+      #paper-blue .paper-date { display: none; }
+      #paper-blue .paper-page { padding: 27px 17px; }
+      #paper-blue .paper-page-header { align-items: start; margin-bottom: 24px; }
+      #paper-blue .paper-heading { font-size: 29px; }
+      #paper-blue .paper-overview-grid { grid-template-columns: 1fr; }
+      #paper-blue .paper-note { min-height: 225px; }
+      #paper-blue .paper-overview-controls { grid-template-columns: 1fr; }
+      #paper-blue .paper-tun { border-left: 0; padding: 12px 0 0; border-top: 1px solid var(--paper-line); }
+      #paper-blue .paper-search { min-width: 0; }
+      #paper-blue .paper-subscription-details { grid-template-columns: 1fr !important; }
+      #paper-blue .paper-subscription-details &gt; div:last-child { padding: 16px 0 0 !important; border-left: 0 !important; border-top: 1px solid var(--paper-line); }
+      #paper-blue .paper-node-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      #paper-blue .paper-node { padding: 10px 8px; }
+      #paper-blue .paper-note-foot { flex-wrap: wrap; gap: 8px; }
+      #paper-blue .paper-proxy-layout { grid-template-columns: 1fr; gap: 20px; }
+      #paper-blue .paper-group-list { display: grid; grid-template-columns: repeat(2, 1fr); }
+      #paper-blue .paper-group { min-height: 49px; }
+      #paper-blue .paper-proxy-head { display: block; }
+      #paper-blue .paper-proxy-actions { margin-top: 14px; }
+    }
+    @media (pointer: coarse) { #paper-blue button, #paper-blue input { min-height: 44px; } #paper-blue input { font-size: 16px; } #paper-blue .paper-switch { min-height: 24px; } #paper-blue .paper-switch::before { position: absolute; content: &quot;&quot;; inset: -10px 0; } }
+    @media (prefers-reduced-motion: reduce) { #paper-blue * { transition: none !important; } }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;paper-window&quot;&gt;
+    &lt;nav class=&quot;paper-nav&quot; aria-label=&quot;Zephyr 主导航&quot;&gt;
+      &lt;div class=&quot;paper-brand&quot;&gt;&lt;span class=&quot;paper-mark&quot;&gt;Z&lt;/span&gt;&lt;span class=&quot;paper-brand-text&quot;&gt;zephyr.&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;paper-nav-rule&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;paper-nav-label&quot;&gt;你的网络空间&lt;/div&gt;
+      &lt;div class=&quot;paper-nav-list&quot; role=&quot;tablist&quot; aria-label=&quot;工作区&quot;&gt;
+        &lt;button id=&quot;paper-overview-tab&quot; class=&quot;paper-nav-btn is-active&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-label=&quot;总览&quot; aria-selected=&quot;true&quot; aria-controls=&quot;paper-overview&quot; data-screen=&quot;overview&quot;&gt;
+          &lt;span class=&quot;paper-nav-num&quot;&gt;01&lt;/span&gt;&lt;span class=&quot;paper-nav-icon&quot;&gt;&lt;i data-lucide=&quot;layout-dashboard&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span&gt;总览&lt;/span&gt;&lt;span class=&quot;paper-nav-arrow&quot;&gt;↗&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button id=&quot;paper-proxies-tab&quot; class=&quot;paper-nav-btn&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-label=&quot;节点&quot; aria-selected=&quot;false&quot; aria-controls=&quot;paper-proxies&quot; data-screen=&quot;proxies&quot;&gt;
+          &lt;span class=&quot;paper-nav-num&quot;&gt;02&lt;/span&gt;&lt;span class=&quot;paper-nav-icon&quot;&gt;&lt;i data-lucide=&quot;globe-2&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span&gt;节点&lt;/span&gt;&lt;span class=&quot;paper-nav-arrow&quot;&gt;↗&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button id=&quot;paper-subscriptions-tab&quot; class=&quot;paper-nav-btn&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-label=&quot;订阅&quot; aria-selected=&quot;false&quot; aria-controls=&quot;paper-subscriptions&quot; data-screen=&quot;subscriptions&quot;&gt;
+          &lt;span class=&quot;paper-nav-num&quot;&gt;03&lt;/span&gt;&lt;span class=&quot;paper-nav-icon&quot;&gt;&lt;i data-lucide=&quot;layers-3&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span&gt;订阅&lt;/span&gt;&lt;span class=&quot;paper-nav-arrow&quot;&gt;↗&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;button id=&quot;paper-settings-tab&quot; class=&quot;paper-nav-btn&quot; type=&quot;button&quot; role=&quot;tab&quot; aria-label=&quot;设置&quot; aria-selected=&quot;false&quot; aria-controls=&quot;paper-settings&quot; data-screen=&quot;settings&quot;&gt;
+          &lt;span class=&quot;paper-nav-num&quot;&gt;04&lt;/span&gt;&lt;span class=&quot;paper-nav-icon&quot;&gt;&lt;i data-lucide=&quot;sliders-horizontal&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/span&gt;&lt;span&gt;设置&lt;/span&gt;&lt;span class=&quot;paper-nav-arrow&quot;&gt;↗&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;paper-nav-bottom&quot;&gt;
+        &lt;div class=&quot;paper-nav-foot&quot;&gt;&lt;span&gt;内核&lt;/span&gt;&lt;strong&gt;mihomo&lt;/strong&gt;&lt;/div&gt;
+        &lt;div class=&quot;paper-nav-foot&quot;&gt;&lt;span&gt;版本&lt;/span&gt;&lt;strong&gt;v1.19.31&lt;/strong&gt;&lt;/div&gt;
+        &lt;div class=&quot;paper-nav-stamp&quot;&gt;ZEPHYR FOR WINDOWS&lt;br&gt;轻盈，有序，始终在线。&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+
+    &lt;div class=&quot;paper-workspace&quot;&gt;
+      &lt;header class=&quot;paper-topbar&quot;&gt;
+        &lt;div class=&quot;paper-top-meta&quot;&gt;&lt;span class=&quot;paper-live&quot;&gt;&lt;i class=&quot;paper-live-dot&quot;&gt;&lt;/i&gt; ZEPHYR&lt;/span&gt;&lt;span&gt;设计预览 · 示例数据&lt;/span&gt;&lt;/div&gt;
+        &lt;div class=&quot;paper-top-actions&quot; aria-hidden=&quot;true&quot;&gt;
+          &lt;span class=&quot;paper-window-btn&quot;&gt;&lt;i data-lucide=&quot;minus&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;paper-window-btn&quot;&gt;&lt;i data-lucide=&quot;square&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+          &lt;span class=&quot;paper-window-btn&quot;&gt;&lt;i data-lucide=&quot;x&quot;&gt;&lt;/i&gt;&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/header&gt;
+
+      &lt;main class=&quot;paper-page&quot;&gt;
+        &lt;section class=&quot;paper-screen&quot; id=&quot;paper-overview&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;paper-overview-tab&quot;&gt;
+          &lt;div class=&quot;paper-page-header&quot;&gt;
+            &lt;div&gt;&lt;div class=&quot;paper-kicker&quot;&gt;&lt;span class=&quot;paper-kicker-line&quot;&gt;&lt;/span&gt;01 / OVERVIEW&lt;/div&gt;&lt;h1 class=&quot;paper-heading&quot;&gt;连接总览&lt;/h1&gt;&lt;p class=&quot;paper-subheading&quot;&gt;当前订阅 Nya Cloud · 运行状态正常&lt;/p&gt;&lt;/div&gt;
+            &lt;div class=&quot;paper-date&quot;&gt;&lt;strong&gt;03:12:44&lt;/strong&gt;本次运行时长&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;paper-overview-grid&quot;&gt;
+            &lt;section class=&quot;paper-hero&quot; aria-label=&quot;实时流量&quot;&gt;
+              &lt;div class=&quot;paper-hero-top&quot;&gt;&lt;span class=&quot;paper-hero-label&quot;&gt;NETWORK / LIVE&lt;/span&gt;&lt;span class=&quot;paper-hero-index&quot;&gt;最近 60 秒&lt;/span&gt;&lt;/div&gt;
+              &lt;h2 id=&quot;paper-connection-title&quot;&gt;网络已连接&lt;span style=&quot;font-size:14px;margin-left:10px;opacity:.75&quot;&gt;↗&lt;/span&gt;&lt;/h2&gt;
+              &lt;div class=&quot;paper-hero-bottom&quot;&gt;
+                &lt;div class=&quot;paper-hero-stat&quot;&gt;&lt;span class=&quot;paper-hero-stat-label&quot;&gt;↓ 下载速率&lt;/span&gt;&lt;span class=&quot;paper-hero-stat-value&quot;&gt;12.8&lt;span class=&quot;paper-unit&quot;&gt;MB/s&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;
+                &lt;div class=&quot;paper-hero-stat&quot;&gt;&lt;span class=&quot;paper-hero-stat-label&quot;&gt;↑ 上传速率&lt;/span&gt;&lt;span class=&quot;paper-hero-stat-value&quot;&gt;1.4&lt;span class=&quot;paper-unit&quot;&gt;MB/s&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;
+              &lt;/div&gt;
+              &lt;svg class=&quot;paper-chart&quot; viewBox=&quot;0 0 600 78&quot; role=&quot;img&quot; aria-label=&quot;最近 60 秒流量折线图&quot;&gt;
+                &lt;line class=&quot;paper-chart-grid&quot; x1=&quot;0&quot; x2=&quot;600&quot; y1=&quot;18&quot; y2=&quot;18&quot;&gt;&lt;/line&gt;&lt;line class=&quot;paper-chart-grid&quot; x1=&quot;0&quot; x2=&quot;600&quot; y1=&quot;42&quot; y2=&quot;42&quot;&gt;&lt;/line&gt;&lt;line class=&quot;paper-chart-grid&quot; x1=&quot;0&quot; x2=&quot;600&quot; y1=&quot;66&quot; y2=&quot;66&quot;&gt;&lt;/line&gt;
+                &lt;path class=&quot;paper-chart-fill&quot; d=&quot;M0 57 L20 45 L40 51 L60 34 L80 44 L100 32 L120 38 L140 29 L160 39 L180 26 L200 33 L220 31 L240 45 L260 41 L280 54 L300 48 L320 58 L340 39 L360 47 L380 30 L400 37 L420 24 L440 32 L460 18 L480 25 L500 20 L520 31 L540 21 L560 34 L580 27 L600 29 L600 78 L0 78 Z&quot;&gt;&lt;/path&gt;
+                &lt;path class=&quot;paper-chart-line&quot; d=&quot;M0 57 L20 45 L40 51 L60 34 L80 44 L100 32 L120 38 L140 29 L160 39 L180 26 L200 33 L220 31 L240 45 L260 41 L280 54 L300 48 L320 58 L340 39 L360 47 L380 30 L400 37 L420 24 L440 32 L460 18 L480 25 L500 20 L520 31 L540 21 L560 34 L580 27 L600 29&quot;&gt;&lt;/path&gt;
+              &lt;/svg&gt;
+            &lt;/section&gt;
+            &lt;aside class=&quot;paper-note&quot; aria-label=&quot;运行摘要&quot;&gt;
+              &lt;div&gt;&lt;div class=&quot;paper-note-top&quot;&gt;&lt;span&gt;ACTIVITY / 01&lt;/span&gt;&lt;span class=&quot;paper-note-mark&quot;&gt;↗&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-note-number&quot;&gt;47&lt;/div&gt;&lt;div class=&quot;paper-note-title&quot;&gt;个活动连接&lt;/div&gt;&lt;div class=&quot;paper-note-copy&quot;&gt;今日累计下载 4.2 GB&lt;br&gt;今日累计上传 312 MB&lt;/div&gt;&lt;/div&gt;
+              &lt;div class=&quot;paper-note-foot&quot;&gt;&lt;span&gt;内存 86 MB&lt;/span&gt;&lt;span&gt;内核运行中&lt;/span&gt;&lt;/div&gt;
+            &lt;/aside&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;paper-rule&quot;&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-section-head&quot;&gt;&lt;h3&gt;当前出站路径&lt;/h3&gt;&lt;span class=&quot;paper-section-label&quot;&gt;ROUTE / PRIMARY&lt;/span&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-route-grid&quot;&gt;
+            &lt;div class=&quot;paper-route&quot;&gt;&lt;div class=&quot;paper-route-icon&quot;&gt;&lt;i data-lucide=&quot;route&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;paper-route-label&quot;&gt;当前节点&lt;/div&gt;&lt;div class=&quot;paper-route-name&quot; id=&quot;paper-current-route&quot;&gt;香港 IEPL 01&lt;/div&gt;&lt;div class=&quot;paper-route-sub&quot;&gt;Nya Cloud · &lt;button type=&quot;button&quot; data-open-nodes style=&quot;padding:0;border:0;background:none;color:var(--paper-blue);font:inherit&quot;&gt;切换节点 ↗&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-route-ms&quot; id=&quot;paper-current-ms&quot;&gt;42 ms&lt;/div&gt;&lt;/div&gt;
+            &lt;div class=&quot;paper-toggle-line&quot;&gt;&lt;div class=&quot;paper-toggle-copy&quot;&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;系统代理&lt;/span&gt;&lt;span class=&quot;paper-toggle-sub&quot; id=&quot;paper-proxy-status&quot;&gt;127.0.0.1:7897 · 已接管&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;paper-switch is-on&quot; type=&quot;button&quot; role=&quot;switch&quot; aria-checked=&quot;true&quot; aria-label=&quot;切换系统代理&quot; id=&quot;paper-proxy-switch&quot;&gt;&lt;/button&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;paper-overview-controls&quot;&gt;&lt;div&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;出站模式&lt;/span&gt;&lt;div class=&quot;paper-mode&quot; aria-label=&quot;出站模式&quot;&gt;&lt;button type=&quot;button&quot; aria-pressed=&quot;true&quot;&gt;规则&lt;/button&gt;&lt;button type=&quot;button&quot; aria-pressed=&quot;false&quot;&gt;全局&lt;/button&gt;&lt;button type=&quot;button&quot; aria-pressed=&quot;false&quot;&gt;直连&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-tun&quot;&gt;&lt;div class=&quot;paper-toggle-copy&quot;&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;TUN 增强模式&lt;/span&gt;&lt;span class=&quot;paper-toggle-sub&quot;&gt;接管设备的全部网络流量&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;paper-switch&quot; type=&quot;button&quot; role=&quot;switch&quot; aria-label=&quot;TUN 增强模式&quot; aria-checked=&quot;false&quot;&gt;&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-bottomline&quot;&gt;&lt;span&gt;配置 &lt;strong&gt;Nya Cloud&lt;/strong&gt;&lt;/span&gt;&lt;span id=&quot;paper-mode-summary&quot;&gt;规则分流 · 本地端口 7897&lt;/span&gt;&lt;span&gt;2 小时前更新&lt;/span&gt;&lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;paper-screen&quot; id=&quot;paper-proxies&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;paper-proxies-tab&quot; hidden&gt;
+          &lt;div class=&quot;paper-page-header&quot;&gt;&lt;div&gt;&lt;div class=&quot;paper-kicker&quot;&gt;&lt;span class=&quot;paper-kicker-line&quot;&gt;&lt;/span&gt;02 / ROUTING&lt;/div&gt;&lt;h1 class=&quot;paper-heading&quot;&gt;代理节点&lt;/h1&gt;&lt;p class=&quot;paper-subheading&quot;&gt;13 个节点 · 3 个地区 · Nya Cloud&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;paper-date&quot;&gt;&lt;strong&gt;13 / 13&lt;/strong&gt;节点可用&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-proxy-layout&quot;&gt;
+            &lt;aside class=&quot;paper-group-list&quot; aria-label=&quot;策略组&quot;&gt;
+              &lt;button class=&quot;paper-group is-active&quot; type=&quot;button&quot; data-group=&quot;节点选择&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;节点选择&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;香港 IEPL 01 · 42 ms&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;paper-group&quot; type=&quot;button&quot; data-group=&quot;自动选择&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;自动选择&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;香港 IEPL 02 · 39 ms&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;paper-group&quot; type=&quot;button&quot; data-group=&quot;流媒体&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;流媒体&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;新加坡 02 · 88 ms&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;paper-group&quot; type=&quot;button&quot; data-group=&quot;AI 服务&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;AI 服务&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;美国 洛杉矶 03 · 168 ms&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;paper-group&quot; type=&quot;button&quot; data-group=&quot;电报消息&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;电报消息&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;跟随节点选择&lt;/span&gt;&lt;/button&gt;
+              &lt;button class=&quot;paper-group&quot; type=&quot;button&quot; data-group=&quot;微软服务&quot;&gt;&lt;span class=&quot;paper-group-name&quot;&gt;微软服务&lt;/span&gt;&lt;span class=&quot;paper-group-count&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;paper-group-node&quot;&gt;DIRECT · 直连&lt;/span&gt;&lt;/button&gt;
+            &lt;/aside&gt;
+            &lt;section class=&quot;paper-proxy-main&quot;&gt;
+              &lt;div class=&quot;paper-proxy-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;paper-proxy-title&quot;&gt;&lt;h2 id=&quot;paper-group-title&quot;&gt;节点选择&lt;/h2&gt;&lt;span&gt;SELECT&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-proxy-sub&quot;&gt;当前 &lt;strong id=&quot;paper-proxy-current&quot;&gt;香港 IEPL 01&lt;/strong&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-proxy-actions&quot;&gt;&lt;button class=&quot;paper-action&quot; id=&quot;paper-test&quot; type=&quot;button&quot;&gt;&lt;i data-lucide=&quot;zap&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;span&gt;测速&lt;/span&gt;&lt;/button&gt;&lt;button class=&quot;paper-action&quot; id=&quot;paper-refresh&quot; type=&quot;button&quot;&gt;&lt;i data-lucide=&quot;refresh-cw&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;刷新&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+              &lt;div class=&quot;paper-search-row&quot;&gt;&lt;label class=&quot;paper-search&quot;&gt;&lt;i data-lucide=&quot;search&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;input id=&quot;paper-node-search&quot; type=&quot;search&quot; placeholder=&quot;搜索节点、地区或线路&quot; aria-label=&quot;搜索节点&quot;&gt;&lt;/label&gt;&lt;span class=&quot;paper-order&quot; id=&quot;paper-search-count&quot;&gt;13 个节点&lt;/span&gt;&lt;/div&gt;
+              &lt;p class=&quot;paper-empty&quot; id=&quot;paper-empty&quot; hidden&gt;没有匹配的节点，试试其他地区或线路名称。&lt;/p&gt;
+              &lt;div class=&quot;paper-region&quot;&gt;&lt;div class=&quot;paper-region-head&quot;&gt;&lt;span class=&quot;paper-region-code&quot;&gt;HK&lt;/span&gt;&lt;span class=&quot;paper-region-name&quot;&gt;香港&lt;/span&gt;&lt;span class=&quot;paper-region-count&quot;&gt;12 nodes&lt;/span&gt;&lt;span class=&quot;paper-region-avg&quot;&gt;AVG 47 MS&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-node-grid&quot;&gt;
+                &lt;button class=&quot;paper-node is-selected&quot; type=&quot;button&quot; data-node=&quot;香港 IEPL 01&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 IEPL 01&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;IEPL · 1.0x&lt;/span&gt;&lt;strong&gt;42 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;香港 IEPL 02&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 IEPL 02&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;IEPL · 1.0x&lt;/span&gt;&lt;strong&gt;39 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;香港 BGP 04&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 BGP 04&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;BGP · 1.0x&lt;/span&gt;&lt;strong&gt;51 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;香港 HKT 05&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 HKT 05&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;HKT · 0.5x&lt;/span&gt;&lt;strong&gt;63 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;香港 CMI 09&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 CMI 09&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;CMI · 1.0x&lt;/span&gt;&lt;strong&gt;121 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;香港 IPLC 08&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;香港 IPLC 08&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;IPLC · 1.0x&lt;/span&gt;&lt;strong&gt;36 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+              &lt;/div&gt;&lt;/div&gt;
+              &lt;div class=&quot;paper-region&quot;&gt;&lt;div class=&quot;paper-region-head&quot;&gt;&lt;span class=&quot;paper-region-code&quot;&gt;SG&lt;/span&gt;&lt;span class=&quot;paper-region-name&quot;&gt;新加坡&lt;/span&gt;&lt;span class=&quot;paper-region-count&quot;&gt;8 nodes&lt;/span&gt;&lt;span class=&quot;paper-region-avg&quot;&gt;AVG 91 MS&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-node-grid&quot;&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;新加坡 01&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;新加坡 01&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;Premium · 1.0x&lt;/span&gt;&lt;strong&gt;84 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;新加坡 02&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;新加坡 02&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;Premium · 1.0x&lt;/span&gt;&lt;strong&gt;88 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;新加坡 IEPL 03&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;新加坡 IEPL 03&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;IEPL · 1.0x&lt;/span&gt;&lt;strong&gt;79 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;新加坡 06&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;新加坡 06&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;BGP · 1.0x&lt;/span&gt;&lt;strong&gt;134 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+              &lt;/div&gt;&lt;/div&gt;
+              &lt;div class=&quot;paper-region&quot;&gt;&lt;div class=&quot;paper-region-head&quot;&gt;&lt;span class=&quot;paper-region-code&quot;&gt;JP&lt;/span&gt;&lt;span class=&quot;paper-region-name&quot;&gt;日本&lt;/span&gt;&lt;span class=&quot;paper-region-count&quot;&gt;9 nodes&lt;/span&gt;&lt;span class=&quot;paper-region-avg&quot;&gt;AVG 102 MS&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-node-grid&quot;&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;日本 东京 IEPL 03&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;日本 东京 IEPL 03&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;IEPL · 1.0x&lt;/span&gt;&lt;strong&gt;72 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;日本 大阪 04&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;日本 大阪 04&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;BGP · 1.0x&lt;/span&gt;&lt;strong&gt;118 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+                &lt;button class=&quot;paper-node&quot; type=&quot;button&quot; data-node=&quot;日本 东京 09&quot;&gt;&lt;span class=&quot;paper-node-name&quot;&gt;日本 东京 09&lt;/span&gt;&lt;span class=&quot;paper-node-meta&quot;&gt;&lt;span&gt;Premium · 1.0x&lt;/span&gt;&lt;strong&gt;101 ms&lt;/strong&gt;&lt;/span&gt;&lt;/button&gt;
+              &lt;/div&gt;&lt;/div&gt;
+              &lt;div class=&quot;paper-footer&quot;&gt;&lt;span&gt;已选 &lt;strong id=&quot;paper-footer-node&quot;&gt;香港 IEPL 01&lt;/strong&gt;&lt;/span&gt;&lt;span&gt;13 个节点 · 3 个地区&lt;/span&gt;&lt;/div&gt;
+              &lt;p class=&quot;paper-notice&quot; id=&quot;paper-node-notice&quot; aria-live=&quot;polite&quot;&gt;延迟为演示数据&lt;/p&gt;
+            &lt;/section&gt;
+          &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;paper-screen&quot; id=&quot;paper-subscriptions&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;paper-subscriptions-tab&quot; hidden&gt;
+          &lt;div class=&quot;paper-page-header&quot;&gt;&lt;div&gt;&lt;div class=&quot;paper-kicker&quot;&gt;&lt;span class=&quot;paper-kicker-line&quot;&gt;&lt;/span&gt;03 / SUBSCRIPTIONS&lt;/div&gt;&lt;h1 class=&quot;paper-heading&quot;&gt;订阅管理&lt;/h1&gt;&lt;p class=&quot;paper-subheading&quot;&gt;管理配置来源，查看流量余额与更新记录。&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;paper-date&quot;&gt;&lt;strong&gt;01&lt;/strong&gt;正在使用的订阅&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-route-grid&quot;&gt;&lt;div class=&quot;paper-route&quot;&gt;&lt;div class=&quot;paper-route-icon&quot;&gt;&lt;i data-lucide=&quot;cloud&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;paper-route-label&quot;&gt;ACTIVE SUBSCRIPTION&lt;/div&gt;&lt;div class=&quot;paper-route-name&quot;&gt;Nya Cloud&lt;/div&gt;&lt;div class=&quot;paper-route-sub&quot;&gt;78.4 GB used / 200 GB · expires 01 DEC 2026&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-route-ms&quot;&gt;39%&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-toggle-line&quot;&gt;&lt;div class=&quot;paper-toggle-copy&quot;&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;自动更新&lt;/span&gt;&lt;span class=&quot;paper-toggle-sub&quot;&gt;下次更新：今天 21:00&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;paper-switch is-on&quot; type=&quot;button&quot; role=&quot;switch&quot; aria-checked=&quot;true&quot; aria-label=&quot;切换自动更新&quot;&gt;&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-rule&quot;&gt;&lt;/div&gt;&lt;div class=&quot;paper-section-head&quot;&gt;&lt;h3&gt;用量与更新时间&lt;/h3&gt;&lt;span class=&quot;paper-section-label&quot;&gt;PROFILE / 01&lt;/span&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-note paper-subscription-details&quot; style=&quot;min-height:0; grid-template-columns:1fr 1fr; gap:28px; align-items:center&quot;&gt;&lt;div&gt;&lt;div class=&quot;paper-note-top&quot;&gt;&lt;span&gt;流量使用&lt;/span&gt;&lt;span&gt;39.2%&lt;/span&gt;&lt;/div&gt;&lt;div role=&quot;progressbar&quot; aria-label=&quot;订阅流量使用&quot; aria-valuemin=&quot;0&quot; aria-valuemax=&quot;100&quot; aria-valuenow=&quot;39.2&quot; style=&quot;height:9px;margin-top:24px;background:var(--paper-blue-pale)&quot;&gt;&lt;div style=&quot;width:39.2%;height:100%;background:var(--paper-blue)&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;paper-note-copy&quot; style=&quot;margin-top:12px&quot;&gt;78.4 GB 已使用，剩余 121.6 GB&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;border-left:1px solid var(--paper-line);padding-left:28px&quot;&gt;&lt;div class=&quot;paper-note-top&quot;&gt;&lt;span&gt;最近更新&lt;/span&gt;&lt;span&gt;正常&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-note-title&quot; style=&quot;margin-top:16px&quot;&gt;2 小时前更新&lt;/div&gt;&lt;div class=&quot;paper-note-copy&quot;&gt;来源：订阅链接 · 13 个节点&lt;br&gt;每 24 小时自动更新&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;paper-screen&quot; id=&quot;paper-settings&quot; role=&quot;tabpanel&quot; aria-labelledby=&quot;paper-settings-tab&quot; hidden&gt;
+          &lt;div class=&quot;paper-page-header&quot;&gt;&lt;div&gt;&lt;div class=&quot;paper-kicker&quot;&gt;&lt;span class=&quot;paper-kicker-line&quot;&gt;&lt;/span&gt;04 / SETTINGS&lt;/div&gt;&lt;h1 class=&quot;paper-heading&quot;&gt;偏好设置&lt;/h1&gt;&lt;p class=&quot;paper-subheading&quot;&gt;调整启动方式与本地网络配置。&lt;/p&gt;&lt;/div&gt;&lt;div class=&quot;paper-date&quot;&gt;&lt;strong&gt;WINDOWS&lt;/strong&gt;浅色外观&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-section-head&quot;&gt;&lt;h3&gt;运行方式&lt;/h3&gt;&lt;span class=&quot;paper-section-label&quot;&gt;BEHAVIOUR / 01&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-route-grid&quot;&gt;&lt;div class=&quot;paper-toggle-line&quot;&gt;&lt;div class=&quot;paper-toggle-copy&quot;&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;开机启动&lt;/span&gt;&lt;span class=&quot;paper-toggle-sub&quot;&gt;登录 Windows 后自动运行&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;paper-switch&quot; type=&quot;button&quot; role=&quot;switch&quot; aria-checked=&quot;false&quot; aria-label=&quot;切换开机启动&quot;&gt;&lt;/button&gt;&lt;/div&gt;&lt;div class=&quot;paper-toggle-line&quot;&gt;&lt;div class=&quot;paper-toggle-copy&quot;&gt;&lt;span class=&quot;paper-toggle-title&quot;&gt;最小化到托盘&lt;/span&gt;&lt;span class=&quot;paper-toggle-sub&quot;&gt;关闭窗口时继续在后台工作&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;paper-switch is-on&quot; type=&quot;button&quot; role=&quot;switch&quot; aria-checked=&quot;true&quot; aria-label=&quot;切换最小化到托盘&quot;&gt;&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;
+          &lt;div class=&quot;paper-rule&quot;&gt;&lt;/div&gt;&lt;div class=&quot;paper-section-head&quot;&gt;&lt;h3&gt;本地端口&lt;/h3&gt;&lt;span class=&quot;paper-section-label&quot;&gt;CORE / mihomo&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-note&quot; style=&quot;min-height:0&quot;&gt;&lt;div class=&quot;paper-note-top&quot;&gt;&lt;span&gt;MIXED PORT&lt;/span&gt;&lt;span&gt;ACTIVE&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;paper-note-title&quot; style=&quot;margin-top:18px;font-family:ui-monospace,Consolas,monospace;font-size:24px;color:var(--paper-blue)&quot;&gt;127.0.0.1 : 7897&lt;/div&gt;&lt;div class=&quot;paper-note-copy&quot;&gt;HTTP / SOCKS5 mixed inbound · control port 9090&lt;/div&gt;&lt;/div&gt;
+        &lt;/section&gt;
+      &lt;/main&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    (() =&gt; {
+      const root = document.getElementById(&quot;paper-blue&quot;);
+      if (!root) return;
+      const screens = [...root.querySelectorAll(&quot;.paper-screen&quot;)];
+      const tabs = [...root.querySelectorAll(&quot;.paper-nav-btn&quot;)];
+      const showScreen = (name) =&gt; {
+        screens.forEach((screen) =&gt; { screen.hidden = screen.id !== `paper-${name}`; });
+        tabs.forEach((tab) =&gt; {
+          const active = tab.dataset.screen === name;
+          tab.classList.toggle(&quot;is-active&quot;, active);
+          tab.setAttribute(&quot;aria-selected&quot;, String(active));
+        });
+      };
+      tabs.forEach((tab, index) =&gt; {
+        tab.addEventListener(&quot;click&quot;, () =&gt; showScreen(tab.dataset.screen));
+        tab.addEventListener(&quot;keydown&quot;, (event) =&gt; {
+          const steps = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+          if (!(event.key in steps)) return;
+          event.preventDefault();
+          const next = tabs[(index + steps[event.key] + tabs.length) % tabs.length];
+          showScreen(next.dataset.screen);
+          next.focus();
+        });
+      });
+      root.querySelector(&quot;[data-open-nodes]&quot;).addEventListener(&quot;click&quot;, () =&gt; showScreen(&quot;proxies&quot;));
+
+      root.querySelectorAll(&quot;.paper-switch&quot;).forEach((switchButton) =&gt; {
+        switchButton.addEventListener(&quot;click&quot;, () =&gt; {
+          const isOn = switchButton.classList.toggle(&quot;is-on&quot;);
+          switchButton.setAttribute(&quot;aria-checked&quot;, String(isOn));
+          if (switchButton.id === &quot;paper-proxy-switch&quot;) {
+            const status = root.querySelector(&quot;#paper-proxy-status&quot;);
+            if (status) status.textContent = isOn ? &quot;127.0.0.1:7897 · 已接管&quot; : &quot;未接管系统流量&quot;;
+            root.querySelector(&quot;#paper-connection-title&quot;).textContent = isOn ? &quot;网络已连接 ↗&quot; : &quot;系统代理已暂停&quot;;
+          }
+        });
+      });
+
+      const groups = [...root.querySelectorAll(&quot;.paper-group&quot;)];
+      const nodes = [...root.querySelectorAll(&quot;.paper-node&quot;)];
+      const regions = [...root.querySelectorAll(&quot;.paper-region&quot;)];
+      const search = root.querySelector(&quot;#paper-node-search&quot;);
+      const notice = root.querySelector(&quot;#paper-node-notice&quot;);
+      const selectedByGroup = {
+        &quot;节点选择&quot;: &quot;香港 IEPL 01&quot;, &quot;自动选择&quot;: &quot;香港 IPLC 08&quot;,
+        &quot;流媒体&quot;: &quot;新加坡 02&quot;, &quot;AI 服务&quot;: &quot;日本 东京 IEPL 03&quot;,
+        &quot;电报消息&quot;: &quot;香港 IEPL 01&quot;, &quot;微软服务&quot;: &quot;DIRECT&quot;
+      };
+      const baseDelays = nodes.map(node =&gt; parseInt(node.querySelector(&quot;strong&quot;).textContent,10));
+      let activeGroup = &quot;节点选择&quot;;
+      const delayFor = (name) =&gt; nodes.find(node =&gt; node.dataset.node === name)?.querySelector(&quot;strong&quot;).textContent || &quot;直连&quot;;
+      const renderSelection = () =&gt; {
+        groups.forEach(group =&gt; {
+          const active = group.dataset.group === activeGroup;
+          const selected = selectedByGroup[group.dataset.group];
+          group.classList.toggle(&quot;is-active&quot;, active);
+          group.setAttribute(&quot;aria-pressed&quot;, String(active));
+          group.querySelector(&quot;.paper-group-node&quot;).textContent = `${selected} · ${delayFor(selected)}`;
+          group.querySelector(&quot;.paper-group-count&quot;).textContent = selected === &quot;DIRECT&quot; ? &quot;直连&quot; : &quot;13&quot;;
+        });
+        const selected = selectedByGroup[activeGroup];
+        root.querySelector(&quot;#paper-group-title&quot;).textContent = activeGroup;
+        root.querySelector(&quot;#paper-proxy-current&quot;).textContent = selected;
+        root.querySelector(&quot;#paper-footer-node&quot;).textContent = selected;
+        root.querySelector(&quot;#paper-current-route&quot;).textContent = selectedByGroup[&quot;节点选择&quot;];
+        root.querySelector(&quot;#paper-current-ms&quot;).textContent = delayFor(selectedByGroup[&quot;节点选择&quot;]);
+        nodes.forEach(node =&gt; {
+          const chosen = node.dataset.node === selected;
+          node.classList.toggle(&quot;is-selected&quot;,chosen);
+          node.setAttribute(&quot;aria-pressed&quot;,String(chosen));
+        });
+      };
+      const filterNodes = () =&gt; {
+        const query = search.value.trim().toLowerCase();
+        nodes.forEach(node =&gt; { node.hidden = !node.textContent.toLowerCase().includes(query); });
+        const visibleCount = nodes.filter(node =&gt; !node.hidden).length;
+        regions.forEach(region =&gt; {
+          const regionNodes = [...region.querySelectorAll(&quot;.paper-node&quot;)];
+          const visible = regionNodes.filter(node =&gt; !node.hidden);
+          region.hidden = visible.length === 0;
+          region.querySelector(&quot;.paper-region-count&quot;).textContent = `${visible.length} 个节点`;
+          const mean = visible.length ? Math.round(visible.reduce((sum,node) =&gt; sum + parseInt(node.querySelector(&quot;strong&quot;).textContent,10),0) / visible.length) : 0;
+          region.querySelector(&quot;.paper-region-avg&quot;).textContent = `平均 ${mean} ms`;
+        });
+        root.querySelector(&quot;#paper-search-count&quot;).textContent = `${visibleCount} 个节点`;
+        root.querySelector(&quot;#paper-empty&quot;).hidden = visibleCount &gt; 0;
+      };
+      groups.forEach(group =&gt; group.addEventListener(&quot;click&quot;, () =&gt; { activeGroup = group.dataset.group; renderSelection(); }));
+      nodes.forEach(node =&gt; node.addEventListener(&quot;click&quot;, () =&gt; {
+        selectedByGroup[activeGroup] = node.dataset.node;
+        renderSelection();
+        notice.textContent = `已将${activeGroup}切换为 ${node.dataset.node}`;
+      }));
+      search.addEventListener(&quot;input&quot;,filterNodes);
+      root.querySelectorAll(&quot;.paper-mode button&quot;).forEach(button =&gt; button.addEventListener(&quot;click&quot;,() =&gt; {
+        root.querySelectorAll(&quot;.paper-mode button&quot;).forEach(item =&gt; item.setAttribute(&quot;aria-pressed&quot;,String(item===button)));
+        root.querySelector(&quot;#paper-mode-summary&quot;).textContent = `${button.textContent}模式 · 本地端口 7897`;
+      }));
+      const testButton = root.querySelector(&quot;#paper-test&quot;);
+      testButton.addEventListener(&quot;click&quot;, () =&gt; {
+        testButton.disabled = true;
+        testButton.querySelector(&quot;span&quot;).textContent = &quot;测速中&quot;;
+        notice.textContent = &quot;正在演示测速过程…&quot;;
+        window.setTimeout(() =&gt; {
+          nodes.forEach((node,index) =&gt; { node.querySelector(&quot;strong&quot;).textContent = `${baseDelays[index]+((index%3)-1)*3} ms`; });
+          testButton.disabled = false;
+          testButton.querySelector(&quot;span&quot;).textContent = &quot;测速&quot;;
+          filterNodes(); renderSelection();
+          notice.textContent = &quot;13 个节点测速完成 · 示例结果&quot;;
+        },650);
+      });
+      root.querySelector(&quot;#paper-refresh&quot;).addEventListener(&quot;click&quot;,() =&gt; {
+        search.value = &quot;&quot;;
+        filterNodes();
+        notice.textContent = &quot;节点列表已刷新 · 示例配置&quot;;
+      });
+      filterNodes(); renderSelection();
+
+      if (globalThis.Tweak) {
+        const state = { accent: &quot;#3157f4&quot;, compact: false, radius: 9 };
+        const render = () =&gt; {
+          root.style.setProperty(&quot;--paper-blue&quot;, state.accent);
+          root.style.setProperty(&quot;--paper-blue-dark&quot;, state.accent);
+          root.classList.toggle(&quot;paper-is-compact&quot;, state.compact);
+          root.style.setProperty(&quot;--paper-radius&quot;, `${state.radius}px`);
+        };
+        render();
+        const tweak = new Tweak({ container: root, onChange: render });
+        tweak.addColorPicker(state, &quot;accent&quot;, { label: &quot;强调蓝&quot;, reference: &quot;--paper-blue&quot; });
+        tweak.addSlider(state, &quot;radius&quot;, { label: &quot;纸面圆角&quot;, min: 0, max: 18, unit: &quot;px&quot;, reference: &quot;--paper-radius&quot; });
+        tweak.addToggle(state, &quot;compact&quot;, { label: &quot;紧凑间距&quot;, reference: &quot;paper.compact&quot; });
+      }
+    })();
+  &lt;/script&gt;
+&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+  let lastPointerWasTouch = false;
+  let pinnedByTouch = false;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    pinnedByTouch = false;
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handlePointer = (event) =&gt; {
+    lastPointerWasTouch =
+      event.type === &quot;pointerdown&quot; &amp;&amp; event.pointerType === &quot;touch&quot;;
+  };
+  const handleTouchClick = (event) =&gt; {
+    const isTouch = event.pointerType === &quot;touch&quot; || lastPointerWasTouch;
+    lastPointerWasTouch = false;
+    if (!isTouch || event.detail === 0) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (
+      trigger == null ||
+      !trigger.isConnected ||
+      getContent(trigger).length === 0 ||
+      (pinnedByTouch &amp;&amp; activeTrigger === trigger)
+    ) {
+      if (pinnedByTouch) {
+        closeTooltip();
+      }
+      return;
+    }
+    openTooltip(trigger);
+    pinnedByTouch = activeTrigger === trigger;
+    window.setTimeout(() =&gt; {
+      if (activeTrigger === trigger &amp;&amp; !trigger.isConnected) {
+        closeTooltip(false);
+      }
+    }, 0);
+  };
+  const handleLeave = (event) =&gt; {
+    if (pinnedByTouch) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    lastPointerWasTouch = false;
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    lastPointerWasTouch = false;
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerdown&quot;, handlePointer);
+    document.removeEventListener(&quot;pointercancel&quot;, handlePointer);
+    document.removeEventListener(&quot;click&quot;, handleTouchClick);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerdown&quot;, handlePointer);
+  document.addEventListener(&quot;pointercancel&quot;, handlePointer);
+  document.addEventListener(&quot;click&quot;, handleTouchClick);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-tabs&quot;&gt;
+(() =&gt; {
+  const selector = &#x27;.nav[role=&quot;tablist&quot;] [role=&quot;tab&quot;]&#x27;;
+  const disabled = &#x27;:disabled,[aria-disabled=&quot;true&quot;]&#x27;;
+  const selectTab = (selected) =&gt; {
+    const panelId = selected.getAttribute(&quot;aria-controls&quot;);
+    for (const tab of selected.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;)) {
+      const active = tab === selected;
+      tab.classList.toggle(&quot;active&quot;, active);
+      tab.setAttribute(&quot;aria-selected&quot;, String(active));
+      const id = tab.getAttribute(&quot;aria-controls&quot;);
+      const panel = id &amp;&amp; document.getElementById(id);
+      if (panel != null) {
+        panel.hidden = id !== panelId;
+        if (!panel.hidden &amp;&amp; selected.id) {
+          panel.setAttribute(&quot;aria-labelledby&quot;, selected.id);
+        }
+      }
+    }
+  };
+  const interact = (event) =&gt; {
+    const tab = event.target?.closest?.(selector);
+    if (event.defaultPrevented || tab == null || tab.matches(disabled)) {
+      return;
+    }
+    if (event.type === &quot;click&quot;) {
+      selectTab(tab);
+      return;
+    }
+    const tabs = Array.from(
+      tab.closest(&#x27;[role=&quot;tablist&quot;]&#x27;).querySelectorAll(&#x27;[role=&quot;tab&quot;]&#x27;),
+    ).filter((candidate) =&gt; !candidate.matches(disabled));
+    const current = tabs.indexOf(tab);
+    let next;
+    if (event.key === &quot;ArrowRight&quot; || event.key === &quot;ArrowDown&quot;) {
+      next = (current + 1) % tabs.length;
+    } else if (event.key === &quot;ArrowLeft&quot; || event.key === &quot;ArrowUp&quot;) {
+      next = (current + tabs.length - 1) % tabs.length;
+    } else if (event.key === &quot;Home&quot;) {
+      next = 0;
+    } else if (event.key === &quot;End&quot;) {
+      next = tabs.length - 1;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    tabs[next].focus();
+    selectTab(tabs[next]);
+  };
+
+  for (const list of document.querySelectorAll(&#x27;.nav[role=&quot;tablist&quot;]&#x27;)) {
+    const selected =
+      list.querySelector(&#x27;[role=&quot;tab&quot;][aria-selected=&quot;true&quot;]&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;].active&#x27;) ??
+      list.querySelector(&#x27;[role=&quot;tab&quot;]&#x27;);
+    if (selected != null) {
+      selectTab(selected);
+    }
+  }
+  document.addEventListener(&quot;click&quot;, interact);
+  document.addEventListener(&quot;keydown&quot;, interact);
+  window.addEventListener(&quot;pagehide&quot;, () =&gt; {
+    document.removeEventListener(&quot;click&quot;, interact);
+    document.removeEventListener(&quot;keydown&quot;, interact);
+  }, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>

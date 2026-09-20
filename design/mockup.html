@@ -1,0 +1,496 @@
+<title>Zephyr 效果图</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+  :root{
+    /* page chrome around the mockups, follows the viewer theme */
+    --ground:#E8E7E1; --ink:#16191F; --muted:#5F6670;
+    --frame-shadow:0 1px 2px rgba(22,25,31,.06), 0 24px 60px -30px rgba(22,25,31,.28);
+    /* app tokens: light-only design, fixed */
+    --cream:#FAF9F5; --side:#F3F2ED; --card:#FFFFFF;
+    --hair:#E3E2DC; --hair-in:#ECEBE6; --hair-strong:#D3D2CB;
+    --text:#16191F; --text-2:#545B64; --text-3:#8A9199;
+    --accent:#527399; --accent-hover:#46648A; --accent-text:#3F5F86;
+    --tint:#EDF2F8; --tint-2:#E1E9F2; --accent-line:#B9CADC;
+    --chart:#5B7FA6; --chart-2:#B7C7D8;
+    --good:#2E8B4A; --warn:#B7791F; --bad:#B5423A;
+    --shadow:0 1px 2px rgba(22,25,31,.04), 0 8px 24px -16px rgba(22,25,31,.12);
+    --btn-shadow:0 1px 1px rgba(22,25,31,.05), inset 0 1px 0 #fff;
+    --font:"Open Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --ground:#15171B; --ink:#ECECEA; --muted:#9AA0A8; --frame-shadow:0 0 0 1px rgba(255,255,255,.06), 0 24px 60px -30px rgba(0,0,0,.7); }
+  }
+  :root[data-theme="dark"]{ --ground:#15171B; --ink:#ECECEA; --muted:#9AA0A8; --frame-shadow:0 0 0 1px rgba(255,255,255,.06), 0 24px 60px -30px rgba(0,0,0,.7); }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button,input{font:inherit;color:inherit}
+  button{background:none;border:0;padding:0;cursor:pointer}
+  button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  h1,h2,h3,h4{margin:0;text-wrap:balance}
+  .num{font-variant-numeric:tabular-nums}
+
+  .page{max-width:1244px;margin:0 auto;padding-block:36px 56px;padding-inline:16px;display:grid;gap:36px}
+  .intro h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+  .intro p{margin:6px 0 0;color:var(--muted);max-width:64ch}
+  .swatches{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px 16px}
+  .swatches li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+  .swatches i{width:20px;height:20px;border-radius:5px;border:1px solid rgba(22,25,31,.12);display:inline-block}
+  .swatches b{font-weight:600;color:var(--ink)}
+  .swatches code{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+
+  .shot{display:grid;gap:10px}
+  .shot-label{display:flex;align-items:baseline;gap:10px;font-size:13px;color:var(--muted)}
+  .shot-label b{font-size:15px;font-weight:700;color:var(--ink)}
+  .fit{position:relative;overflow:hidden}
+  .win{width:1180px;height:920px;transform-origin:0 0;position:absolute;left:0;top:0;background:var(--cream);color:var(--text);border-radius:8px;overflow:hidden;box-shadow:var(--frame-shadow);display:flex}
+
+  /* ---------- sidebar: text navigation ---------- */
+  .side{width:220px;flex:none;background:var(--side);border-right:1px solid var(--hair);display:flex;flex-direction:column;padding:18px 14px 16px}
+  .wordmark{padding:0 10px 14px;display:grid;gap:1px}
+  .wordmark b{font-size:15px;font-weight:700;letter-spacing:.01em}
+  .wordmark span{font-size:11.5px;color:var(--text-3)}
+  .nav-group{display:grid;gap:1px;padding-top:6px}
+  .nav-group + .nav-group{margin-top:10px;padding-top:12px;border-top:1px solid var(--hair)}
+  .nav-label{font-size:11.5px;font-weight:700;color:var(--text-3);letter-spacing:.04em;padding:0 10px;margin-bottom:4px}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:30px;padding:0 10px;border-radius:6px;font-size:13.5px;color:var(--text-2);text-decoration:none;border:1px solid transparent}
+  .nav:hover{background:rgba(22,25,31,.04);color:var(--text)}
+  .nav.sel{background:linear-gradient(var(--tint),var(--tint-2));color:var(--accent-text);font-weight:600;border-color:rgba(82,115,153,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+  .nav .cnt{font-size:11.5px;color:var(--text-3);font-weight:400}
+  .side-foot{margin-top:auto;display:grid;gap:8px}
+  .core-status{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--text-2);padding:8px 10px 0;border-top:1px solid var(--hair)}
+
+  /* ---------- content column ---------- */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{height:38px;flex:none;display:flex}
+  .drag{flex:1}
+  .caption{display:flex;height:100%}
+  .cap{width:46px;height:100%;display:grid;place-items:center;color:var(--text)}
+  .cap svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:1}
+  .cap:hover{background:rgba(22,25,31,.06)}
+  .cap.close:hover{background:#C42B1C;color:#fff}
+  .content{flex:1;min-height:0;overflow:auto;padding:10px 32px 24px;display:grid;gap:14px;align-content:start}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:34px}
+  .head h1{font-size:24px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+  .head-actions{display:flex;align-items:center;gap:8px}
+
+  /* ---------- shared: status, buttons, controls ---------- */
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);display:inline-block;flex:none}
+  .dot.on{background:var(--good)}
+  .status{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text-2)}
+  .status b{font-weight:600;color:var(--text)}
+  .btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 14px;border-radius:6px;border:1px solid var(--hair-strong);background:linear-gradient(#FFFFFF,#F5F5F2);box-shadow:var(--btn-shadow);font-size:13px;font-weight:600;color:var(--text);white-space:nowrap}
+  .btn:hover{background:linear-gradient(#FFFFFF,#EEEEEA)}
+  .btn:active{background:#EBEBE7;box-shadow:inset 0 1px 2px rgba(22,25,31,.08)}
+  .btn.primary{background:linear-gradient(#6A8CB1,#527399);border-color:#46648A;color:#fff;box-shadow:0 1px 1px rgba(22,25,31,.08), inset 0 1px 0 rgba(255,255,255,.25)}
+  .btn.primary:hover{background:linear-gradient(#6284A9,#46648A)}
+  .btn.sm{height:26px;padding:0 10px;font-size:12.5px}
+  .link{color:var(--accent-text);text-decoration:none;font-size:13px;font-weight:600}
+  .link:hover{text-decoration:underline}
+  .tag{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:4px;border:1px solid var(--hair-strong);background:var(--card);color:var(--text-2);font-size:11.5px;font-weight:600;letter-spacing:.02em}
+  .switch{width:40px;height:22px;border-radius:11px;background:#DCDDDF;border:1px solid rgba(22,25,31,.10);box-shadow:inset 0 1px 2px rgba(22,25,31,.10);position:relative;flex:none;transition:background .15s}
+  .switch::after{content:"";position:absolute;top:1px;left:1px;width:18px;height:18px;border-radius:50%;background:linear-gradient(#FFFFFF,#F1F1EF);box-shadow:0 1px 2px rgba(22,25,31,.22);transition:left .15s}
+  .switch.on{background:linear-gradient(#6A8CB1,#5B7FA6);border-color:#527399}
+  .switch.on::after{left:19px}
+  .seg{display:inline-flex;border:1px solid var(--hair-strong);border-radius:6px;overflow:hidden;background:linear-gradient(#FFFFFF,#F5F5F2);box-shadow:var(--btn-shadow)}
+  .seg button{height:26px;padding:0 12px;font-size:12.5px;font-weight:600;color:var(--text-2);border-left:1px solid var(--hair-strong)}
+  .seg button:first-child{border-left:0}
+  .seg button.on{background:linear-gradient(var(--tint-2),#D6E0EB);color:var(--accent-text);box-shadow:inset 0 1px 2px rgba(22,25,31,.10)}
+  .ms{font-variant-numeric:tabular-nums;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+  .ms::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.9}
+  .ms.ok{color:var(--good)} .ms.mid{color:var(--warn)} .ms.bad{color:var(--bad)} .ms.none{color:var(--text-3)}
+
+  /* ---------- container (AWS-style header + body) ---------- */
+  .box{background:var(--card);border:1px solid var(--hair);border-radius:8px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-width:0}
+  .box-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:14px 20px 12px;border-bottom:1px solid var(--hair-in)}
+  .box-title{display:flex;align-items:center;gap:8px}
+  .box-head h2{font-size:16px;font-weight:700;line-height:1.3}
+  .box-head h2 .cnt{color:var(--text-3);font-weight:400}
+  .box-desc{font-size:12.5px;color:var(--text-2);margin-top:2px}
+  .box-actions{display:flex;align-items:center;gap:8px;flex:none}
+
+  /* key-value column layout with vertical hairlines */
+  .kv-cols{display:grid;grid-template-columns:repeat(4,1fr)}
+  .kv-cols > div{padding:14px 20px;border-left:1px solid var(--hair-in)}
+  .kv-cols > div:first-child{border-left:0}
+  .k{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:4px}
+  .v{font-size:14px;color:var(--text)}
+  .v.big{font-size:26px;font-weight:700;line-height:1.1;letter-spacing:-.01em;display:flex;align-items:baseline;gap:6px}
+  .v.big .u{font-size:12.5px;font-weight:600;color:var(--text-2);letter-spacing:0}
+  .v.big .sub{font-size:12.5px;font-weight:400;color:var(--text-2)}
+
+  .chart-wrap{padding:6px 20px 12px;border-top:1px solid var(--hair-in)}
+  .chart{width:100%;height:auto;display:block}
+  .chart text{font-family:var(--font);font-size:11px;fill:var(--text-3)}
+  .chart-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);padding-top:6px}
+  .legend{display:flex;gap:14px}
+  .legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:6px;border-radius:1px}
+
+  /* rows with a control on the right */
+  .rows{display:flex;flex-direction:column}
+  .row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:12px 20px;border-top:1px solid var(--hair-in)}
+  .row:first-child{border-top:0}
+  .row-lbl{font-size:14px;font-weight:600}
+  .row-desc{font-size:12.5px;color:var(--text-2)}
+
+  /* key-value grid */
+  .kv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 20px;padding:14px 20px 16px}
+  .bar{height:6px;border-radius:3px;background:var(--tint-2);overflow:hidden;margin-top:6px}
+  .bar i{display:block;height:100%;background:var(--chart);border-radius:3px}
+
+  /* table */
+  .table{width:100%;border-collapse:collapse;font-size:13.5px}
+  .table th{text-align:left;font-size:12px;font-weight:700;color:var(--text-2);padding:8px 20px;border-bottom:1px solid var(--hair-strong);white-space:nowrap;background:#FBFBF9}
+  .table td{padding:0 20px;height:38px;border-bottom:1px solid var(--hair-in);white-space:nowrap;vertical-align:middle}
+  .table tr:last-child td{border-bottom:0}
+  .table tbody tr:hover td{background:#FAFAF7}
+  .table tr.sel td{background:var(--tint)}
+  .table .r{text-align:right}
+  .table .sub{color:var(--text-2)}
+  .radio{width:16px;height:16px;border-radius:50%;border:1px solid var(--hair-strong);background:linear-gradient(#fff,#F3F3F0);box-shadow:inset 0 1px 1px rgba(22,25,31,.06);display:inline-block;vertical-align:middle;position:relative}
+  .radio.on{border-color:var(--accent);background:linear-gradient(#6A8CB1,#527399)}
+  .radio.on::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fff}
+  .sort::after{content:" ▲";font-size:9px;color:var(--text-3)}
+  .table-foot{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-top:1px solid var(--hair-in);font-size:12.5px;color:var(--text-2)}
+
+  /* toolbar: search + filters + pagination */
+  .toolbar{display:flex;align-items:center;gap:10px;padding:12px 20px;border-bottom:1px solid var(--hair-in)}
+  .search{display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;flex:1;max-width:360px;border-radius:15px;background:#fff;border:1px solid var(--hair-strong);box-shadow:inset 0 1px 2px rgba(22,25,31,.08)}
+  .search svg{width:14px;height:14px;fill:none;stroke:var(--text-3);stroke-width:2;stroke-linecap:round;flex:none}
+  .search input{flex:1;border:0;background:none;padding:0;font-size:13px;min-width:0}
+  .search input::placeholder{color:var(--text-3)}
+  .select{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 10px 0 12px;border-radius:6px;border:1px solid var(--hair-strong);background:linear-gradient(#FFFFFF,#F5F5F2);box-shadow:var(--btn-shadow);font-size:13px;color:var(--text)}
+  .select svg{width:12px;height:12px;fill:none;stroke:var(--text-2);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .pager{margin-left:auto;display:flex;align-items:center;gap:2px;font-size:12.5px;color:var(--text-2)}
+  .pager button{width:26px;height:26px;border-radius:5px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+  .pager button:hover{background:rgba(22,25,31,.05)}
+  .pager button.on{background:var(--tint-2);color:var(--accent-text);font-weight:700}
+  .pager svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* two- and three-column grids */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .split{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+
+  /* group list (proxies page, left) */
+  .glist{display:grid;gap:2px}
+  .glabel{font-size:12px;font-weight:700;color:var(--text-2);padding:0 10px 6px}
+  .glabel .cnt{font-weight:400;color:var(--text-3)}
+  .gi{display:grid;gap:2px;padding:8px 10px;border-radius:6px;border:1px solid transparent;cursor:pointer}
+  .gi:hover{background:rgba(22,25,31,.04)}
+  .gi.sel{background:linear-gradient(var(--tint),var(--tint-2));border-color:rgba(82,115,153,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+  .gi-top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13.5px;font-weight:600}
+  .gi.sel .gi-top{color:var(--accent-text)}
+  .gi-top .ms{font-size:12px;font-weight:400}
+  .gi-sub{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* notes */
+  .notes{color:var(--muted);font-size:13.5px;max-width:70ch}
+  .notes h2{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:8px}
+  .notes ul{margin:0;padding-left:18px;display:grid;gap:6px}
+  .notes li b{color:var(--ink);font-weight:600}
+
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+
+<div class="page">
+
+  <header class="intro">
+    <h1>Zephyr 效果图 · 第二版</h1>
+    <p>Swiss 网格 + 企业级极简 + 一点老 Apple 的细腻。奶白底、雾蓝强调、极细分割线、低对比阴影，导航用文字。容器的"标题 + 说明"头部、键值分栏、带单选列和工具栏的表格，这些是 AWS 的做法。窗口按 1180 × 920 画。</p>
+    <ul class="swatches">
+      <li><i style="background:#FAF9F5"></i><b>奶白底</b><code>#FAF9F5</code></li>
+      <li><i style="background:#F3F2ED"></i><b>侧栏</b><code>#F3F2ED</code></li>
+      <li><i style="background:#FFFFFF"></i><b>容器</b><code>#FFFFFF</code></li>
+      <li><i style="background:#E3E2DC"></i><b>细线</b><code>#E3E2DC</code></li>
+      <li><i style="background:#16191F"></i><b>主文字</b><code>#16191F</code></li>
+      <li><i style="background:#545B64"></i><b>次文字</b><code>#545B64</code></li>
+      <li><i style="background:#527399"></i><b>雾蓝</b><code>#527399</code></li>
+      <li><i style="background:#EDF2F8"></i><b>雾蓝底</b><code>#EDF2F8</code></li>
+      <li><i style="background:#2E8B4A"></i><b>正常</b><code>#2E8B4A</code></li>
+    </ul>
+  </header>
+
+  <!-- ================= 首页 ================= -->
+  <section class="shot">
+    <div class="shot-label"><b>总览</b>流量容器、运行控制、当前订阅、常用策略组表格。</div>
+    <div class="fit">
+      <div class="win" role="img" aria-label="总览页效果图">
+        <aside class="side">
+          <div class="wordmark"><b>Zephyr</b><span class="num">mihomo 1.19.31</span></div>
+          <div class="nav-group">
+            <a class="nav sel" href="#">总览</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">网络</div>
+            <a class="nav" href="#">代理 <span class="cnt num">8</span></a>
+            <a class="nav" href="#">订阅 <span class="cnt num">2</span></a>
+            <a class="nav" href="#">规则</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">监控</div>
+            <a class="nav" href="#">连接 <span class="cnt num">47</span></a>
+            <a class="nav" href="#">日志</a>
+          </div>
+          <div class="side-foot">
+            <a class="nav" href="#">设置</a>
+            <div class="core-status num"><i class="dot on"></i>内核运行中 · 端口 7897</div>
+          </div>
+        </aside>
+
+        <div class="main">
+          <div class="topbar">
+            <div class="drag"></div>
+            <div class="caption">
+              <button class="cap" title="最小化"><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></button>
+              <button class="cap" title="最大化"><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" rx="1"/></svg></button>
+              <button class="cap close" title="关闭"><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></button>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="head">
+              <h1>总览</h1>
+              <div class="head-actions">
+                <span class="status"><i class="dot on"></i><b>运行中</b>· 已运行 3 小时 12 分</span>
+                <button class="btn">刷新</button>
+                <button class="btn primary">更新订阅</button>
+              </div>
+            </div>
+
+            <section class="box">
+              <div class="box-head">
+                <div>
+                  <div class="box-title"><h2>流量</h2></div>
+                  <div class="box-desc num">混合端口 7897 · 控制端口 9090 · 今日 ↓ 4.2 GB ↑ 312 MB</div>
+                </div>
+                <div class="box-actions"><div class="seg" role="radiogroup" aria-label="时间范围"><button class="on">60 秒</button><button>5 分钟</button><button>30 分钟</button></div></div>
+              </div>
+              <div class="kv-cols num">
+                <div><div class="k">下行</div><div class="v big"><span id="down-now">5.1</span><span class="u">MB/s</span></div></div>
+                <div><div class="k">上行</div><div class="v big"><span id="up-now">0.7</span><span class="u">MB/s</span></div></div>
+                <div><div class="k">活动连接</div><div class="v big">47<span class="sub">TCP 41 · UDP 6</span></div></div>
+                <div><div class="k">内存</div><div class="v big">86<span class="u">MB</span></div></div>
+              </div>
+              <div class="chart-wrap">
+                <svg class="chart" id="traffic" viewBox="0 0 850 100" aria-label="最近 60 秒流量"></svg>
+                <div class="chart-foot"><span>最近 60 秒</span><span class="legend"><span><i style="background:#5B7FA6"></i>下行</span><span><i style="background:#B7C7D8"></i>上行</span></span></div>
+              </div>
+            </section>
+
+            <div class="two">
+              <section class="box">
+                <div class="box-head">
+                  <div><div class="box-title"><h2>运行控制</h2></div><div class="box-desc">改动即时生效，不需要重启内核</div></div>
+                </div>
+                <div class="rows">
+                  <div class="row"><div><div class="row-lbl">系统代理</div><div class="row-desc num">接管 Windows 系统代理，127.0.0.1:7897</div></div><button class="switch on" role="switch" aria-checked="true" aria-label="系统代理"></button></div>
+                  <div class="row"><div><div class="row-lbl">TUN 模式</div><div class="row-desc">虚拟网卡接管所有流量，需要管理员权限</div></div><button class="switch" role="switch" aria-checked="false" aria-label="TUN 模式"></button></div>
+                  <div class="row"><div><div class="row-lbl">出站模式</div><div class="row-desc">按规则分流，国内直连</div></div><div class="seg" role="radiogroup" aria-label="出站模式"><button class="on">规则</button><button>全局</button><button>直连</button></div></div>
+                </div>
+              </section>
+
+              <section class="box">
+                <div class="box-head">
+                  <div><div class="box-title"><h2>当前订阅</h2></div><div class="box-desc">Nya Cloud（示例）</div></div>
+                  <div class="box-actions"><button class="btn sm">更新</button><button class="btn sm">切换</button></div>
+                </div>
+                <div class="kv-grid num">
+                  <div><div class="k">状态</div><div class="v"><span class="status"><i class="dot on"></i><b>正常</b></span></div></div>
+                  <div><div class="k">到期</div><div class="v">2026-12-01 <span class="sub" style="color:var(--text-2)">· 剩 71 天</span></div></div>
+                  <div style="grid-column:1 / -1"><div class="k">已用流量</div><div class="v">78.4 GB / 200 GB <span style="color:var(--text-2)">· 39%</span></div><div class="bar"><i style="width:39.2%"></i></div></div>
+                  <div><div class="k">上次更新</div><div class="v">2 小时前</div></div>
+                  <div><div class="k">自动更新</div><div class="v">每 24 小时</div></div>
+                </div>
+              </section>
+            </div>
+
+            <section class="box">
+              <div class="box-head">
+                <div><div class="box-title"><h2>常用策略组 <span class="cnt num">(4)</span></h2></div><div class="box-desc">切换节点到代理页操作</div></div>
+                <div class="box-actions"><a class="link" href="#">查看全部</a></div>
+              </div>
+              <table class="table num">
+                <thead><tr><th>策略组</th><th>类型</th><th>当前节点</th><th class="r">延迟</th></tr></thead>
+                <tbody>
+                  <tr><td>节点选择</td><td class="sub">select</td><td>香港 IEPL 01</td><td class="r"><span class="ms ok">42 ms</span></td></tr>
+                  <tr><td>流媒体</td><td class="sub">select</td><td>新加坡 02</td><td class="r"><span class="ms ok">88 ms</span></td></tr>
+                  <tr><td>AI 服务</td><td class="sub">select</td><td>美国 洛杉矶 03</td><td class="r"><span class="ms mid">168 ms</span></td></tr>
+                  <tr><td>微软服务</td><td class="sub">select</td><td>DIRECT</td><td class="r"><span class="ms none">直连</span></td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 代理页 ================= -->
+  <section class="shot">
+    <div class="shot-label"><b>代理</b>左边策略组列表，右边是带单选列、搜索和分页的节点表格。</div>
+    <div class="fit">
+      <div class="win" role="img" aria-label="代理页效果图">
+        <aside class="side">
+          <div class="wordmark"><b>Zephyr</b><span class="num">mihomo 1.19.31</span></div>
+          <div class="nav-group">
+            <a class="nav" href="#">总览</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">网络</div>
+            <a class="nav sel" href="#">代理 <span class="cnt num">8</span></a>
+            <a class="nav" href="#">订阅 <span class="cnt num">2</span></a>
+            <a class="nav" href="#">规则</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">监控</div>
+            <a class="nav" href="#">连接 <span class="cnt num">47</span></a>
+            <a class="nav" href="#">日志</a>
+          </div>
+          <div class="side-foot">
+            <a class="nav" href="#">设置</a>
+            <div class="core-status num"><i class="dot on"></i>内核运行中 · 端口 7897</div>
+          </div>
+        </aside>
+
+        <div class="main">
+          <div class="topbar">
+            <div class="drag"></div>
+            <div class="caption">
+              <button class="cap" title="最小化"><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></button>
+              <button class="cap" title="最大化"><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" rx="1"/></svg></button>
+              <button class="cap close" title="关闭"><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></button>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="head">
+              <h1>代理</h1>
+              <div class="head-actions"><button class="btn">测速全部</button><button class="btn">刷新</button></div>
+            </div>
+
+            <div class="split">
+              <div class="glist num">
+                <div class="glabel">策略组 <span class="cnt">(8)</span></div>
+                <div class="gi sel"><div class="gi-top">节点选择<span class="ms ok">42 ms</span></div><div class="gi-sub">香港 IEPL 01</div></div>
+                <div class="gi"><div class="gi-top">自动选择<span class="ms ok">39 ms</span></div><div class="gi-sub">url-test · 香港 IEPL 02</div></div>
+                <div class="gi"><div class="gi-top">流媒体<span class="ms ok">88 ms</span></div><div class="gi-sub">新加坡 02</div></div>
+                <div class="gi"><div class="gi-top">AI 服务<span class="ms mid">168 ms</span></div><div class="gi-sub">美国 洛杉矶 03</div></div>
+                <div class="gi"><div class="gi-top">电报消息<span class="ms ok">42 ms</span></div><div class="gi-sub">节点选择 → 香港 IEPL 01</div></div>
+                <div class="gi"><div class="gi-top">微软服务<span class="ms none">直连</span></div><div class="gi-sub">DIRECT</div></div>
+                <div class="gi"><div class="gi-top">苹果服务<span class="ms none">直连</span></div><div class="gi-sub">DIRECT</div></div>
+                <div class="gi"><div class="gi-top">漏网之鱼<span class="ms ok">42 ms</span></div><div class="gi-sub">节点选择 → 香港 IEPL 01</div></div>
+              </div>
+
+              <section class="box">
+                <div class="box-head">
+                  <div>
+                    <div class="box-title"><h2>节点选择 <span class="cnt num">(42)</span></h2><span class="tag">select</span></div>
+                    <div class="box-desc num">当前 香港 IEPL 01 · 42 ms · 12 秒前测速</div>
+                  </div>
+                  <div class="box-actions"><button class="btn">测速</button><button class="btn">刷新</button></div>
+                </div>
+                <div class="toolbar">
+                  <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input id="node-search" type="text" placeholder="查找节点" aria-label="查找节点"></label>
+                  <button class="select">所有地区 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                  <button class="select">按名称 <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+                  <div class="pager">
+                    <button aria-label="上一页"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+                    <button class="on">1</button><button>2</button><button>3</button>
+                    <button aria-label="下一页"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+                  </div>
+                </div>
+                <table class="table num">
+                  <thead><tr><th style="width:44px"></th><th class="sort">节点</th><th>地区</th><th>协议</th><th class="r">延迟</th></tr></thead>
+                  <tbody>
+                    <tr class="sel"><td><span class="radio on"></span></td><td>香港 IEPL 01</td><td class="sub">香港</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">42 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 IEPL 02</td><td class="sub">香港</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">39 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 IEPL 03</td><td class="sub">香港</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">45 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 BGP 04</td><td class="sub">香港</td><td class="sub">VLESS</td><td class="r"><span class="ms ok">51 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 HKT 05 [0.5x]</td><td class="sub">香港</td><td class="sub">Shadowsocks</td><td class="r"><span class="ms ok">63 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 HKBN 06</td><td class="sub">香港</td><td class="sub">VLESS</td><td class="r"><span class="ms ok">48 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 家宽 07 [2x]</td><td class="sub">香港</td><td class="sub">Hysteria2</td><td class="r"><span class="ms ok">58 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 IPLC 08</td><td class="sub">香港</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">36 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 CMI 09</td><td class="sub">香港</td><td class="sub">VLESS</td><td class="r"><span class="ms mid">121 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>香港 10</td><td class="sub">香港</td><td class="sub">Shadowsocks</td><td class="r"><span class="ms bad">超时</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>新加坡 01</td><td class="sub">新加坡</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">84 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>新加坡 02</td><td class="sub">新加坡</td><td class="sub">VLESS</td><td class="r"><span class="ms ok">88 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>新加坡 IEPL 03</td><td class="sub">新加坡</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">79 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>日本 东京 01</td><td class="sub">日本</td><td class="sub">Trojan</td><td class="r"><span class="ms ok">96 ms</span></td></tr>
+                    <tr><td><span class="radio"></span></td><td>日本 东京 IEPL 03</td><td class="sub">日本</td><td class="sub">Hysteria2</td><td class="r"><span class="ms ok">72 ms</span></td></tr>
+                  </tbody>
+                </table>
+                <div class="table-foot num"><span>显示 1–15，共 42 个节点</span><span>150 ms 以内为绿，300 ms 以内为黄</span></div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h2>这一版改了什么</h2>
+    <ul>
+      <li><b>导航改成文字</b>，按"网络 / 监控"分组，右侧带数量。选中项是一层很浅的雾蓝渐变加一道内高光，这是老 Apple 源列表的做法。</li>
+      <li><b>每个容器都有"标题 + 一句说明"的头部</b>，操作按钮靠右，键值信息用竖线分栏，这是 AWS 控制台的骨架。</li>
+      <li><b>节点从 chip 改成表格</b>：单选列、搜索、地区筛选、分页，42 个节点也不乱。</li>
+      <li><b>按钮、开关、搜索框都带一点老 Apple 的质感</b>：极浅的上下渐变、1 像素内高光、搜索框内阴影。阴影全部低对比。</li>
+      <li>去掉了炭黑大块。雾蓝 #527399 在白底上给按钮和文字，曲线用稍亮的 #5B7FA6。</li>
+      <li>订阅名、节点名、流量数都是编的示例。</li>
+    </ul>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  function fit(){
+    document.querySelectorAll('.fit').forEach(function(f){
+      var w = f.querySelector('.win');
+      var s = Math.min(1, f.clientWidth / 1180);
+      w.style.transform = 'scale(' + s + ')';
+      f.style.height = Math.round(920 * s) + 'px';
+    });
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  // traffic chart: last 60 s, download + upload in MB/s
+  var svg = document.getElementById('traffic');
+  var W = 850, H = 100, padR = 56, padT = 8, padB = 18, n = 60, max = 12;
+  var down = [], up = [];
+  for (var i = 0; i < n; i++) {
+    var t = i;
+    down.push(Math.max(0.3, 5 + 3 * Math.sin(t / 6) + 1.5 * Math.sin(t / 2.3 + 1) + 0.8 * Math.sin(t * 1.7)));
+    up.push(Math.max(0.1, 0.8 + 0.5 * Math.sin(t / 4 + 2) + 0.3 * Math.sin(t * 1.3)));
+  }
+  var x = function(i){ return (i * (W - padR) / (n - 1)).toFixed(1); };
+  var y = function(v){ return (padT + (H - padT - padB) * (1 - v / max)).toFixed(1); };
+  var line = function(arr){ return arr.map(function(v, i){ return (i ? 'L' : 'M') + x(i) + ' ' + y(v); }).join(' '); };
+  var ns = 'http://www.w3.org/2000/svg';
+  var el = function(tag, attrs, text){
+    var e = document.createElementNS(ns, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  var defs = el('defs');
+  var g = el('linearGradient', { id: 'gfill', x1: 0, y1: 0, x2: 0, y2: 1 });
+  g.appendChild(el('stop', { offset: '0', 'stop-color': '#5B7FA6', 'stop-opacity': '.22' }));
+  g.appendChild(el('stop', { offset: '1', 'stop-color': '#5B7FA6', 'stop-opacity': '0' }));
+  defs.appendChild(g); svg.appendChild(defs);
+  [0, 4, 8, 12].forEach(function(v){
+    svg.appendChild(el('line', { x1: 0, x2: W - padR, y1: y(v), y2: y(v), stroke: '#ECEBE6', 'stroke-width': 1 }));
+    svg.appendChild(el('text', { x: W - padR + 10, y: (+y(v) + 4).toFixed(1) }, v + ' MB/s'));
+  });
+  svg.appendChild(el('path', { d: line(down) + ' L' + x(n - 1) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + ' Z', fill: 'url(#gfill)' }));
+  svg.appendChild(el('path', { d: line(down), fill: 'none', stroke: '#5B7FA6', 'stroke-width': 1.75, 'stroke-linejoin': 'round' }));
+  svg.appendChild(el('path', { d: line(up), fill: 'none', stroke: '#B7C7D8', 'stroke-width': 1.5, 'stroke-linejoin': 'round' }));
+  svg.appendChild(el('circle', { cx: x(n - 1), cy: y(down[n - 1]), r: 3.5, fill: '#5B7FA6', stroke: '#FFFFFF', 'stroke-width': 2 }));
+  svg.appendChild(el('text', { x: 0, y: H - 3 }, '60 秒前'));
+  svg.appendChild(el('text', { x: W - padR, y: H - 3, 'text-anchor': 'end' }, '现在'));
+  document.getElementById('down-now').textContent = down[n - 1].toFixed(1);
+  document.getElementById('up-now').textContent = up[n - 1].toFixed(1);
+})();
+</script>

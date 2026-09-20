@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zephyr — Swiss / Mist Blue Mockup</title>
+<style>
+  /* ============ 基础 ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+  :root {
+    --canvas:      #F5F4EE;   /* 奶白画布 */
+    --surface:     #FDFDFA;   /* 面板 */
+    --card:        #FFFFFF;
+    --hairline:    rgba(30,34,40,.07);
+    --hairline-2:  rgba(30,34,40,.045);
+    --ink:         #22262D;
+    --ink-2:       #50565F;
+    --ink-3:       #9BA1AA;
+    --blue:        #6E93C4;   /* 雾蓝 */
+    --blue-deep:   #4E6FA0;
+    --blue-ghost:  rgba(110,147,196,.11);
+    --green:       #5BA585;
+    --amber:       #C9A25C;
+    --red:         #C4625F;
+    --shadow-card: 0 1px 2px rgba(30,34,40,.035), 0 8px 24px rgba(30,34,40,.04);
+    --shadow-pop:  0 2px 6px rgba(30,34,40,.05), 0 16px 40px rgba(30,34,40,.08);
+  }
+  html, body { background: #E9E7E0; }
+  body {
+    font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, "Microsoft YaHei", sans-serif;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 56px 64px 72px;
+  }
+  .stage { display: flex; gap: 72px; align-items: flex-start; justify-content: center; }
+  .win {
+    width: 1100px; height: 780px; flex: none;
+    background: var(--canvas);
+    border-radius: 10px;
+    border: 1px solid rgba(30,34,40,.10);
+    box-shadow: 0 24px 70px rgba(30,34,40,.16), 0 2px 8px rgba(30,34,40,.08);
+    display: flex; flex-direction: column;
+    overflow: hidden; position: relative;
+  }
+  .win-label { text-align: center; color: #8b8e95; font-size: 12px; letter-spacing: .12em; margin-top: 14px; }
+
+  /* ============ 标题栏 ============ */
+  .titlebar {
+    height: 46px; flex: none;
+    display: flex; align-items: center;
+    padding: 0 0 0 16px;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--canvas);
+  }
+  .brand { display: flex; align-items: baseline; gap: 8px; }
+  .brand b { font-size: 13.5px; font-weight: 600; letter-spacing: .02em; }
+  .brand .ver { font-size: 10.5px; color: var(--ink-3); letter-spacing: .06em; font-weight: 500; }
+  .title-spacer { flex: 1; }
+  .winbtns { display: flex; height: 100%; }
+  .winbtns span {
+    width: 46px; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-2);
+  }
+  .winbtns span.close:hover { background: #C4625F; color: #fff; }
+  .winbtns span:not(.close):hover { background: rgba(30,34,40,.05); }
+  .winbtns svg { width: 12px; height: 12px; }
+
+  /* ============ 主体布局 ============ */
+  .body { flex: 1; display: flex; min-height: 0; }
+  .nav {
+    width: 216px; flex: none;
+    background: #F1F0EA;
+    border-right: 1px solid var(--hairline);
+    padding: 14px 12px;
+    display: flex; flex-direction: column;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 7px;
+    font-size: 13px; color: var(--ink-2);
+    cursor: default; margin-bottom: 2px;
+  }
+  .nav-item svg { width: 15px; height: 15px; stroke-width: 1.6; color: var(--ink-3); flex: none; }
+  .nav-item:hover { background: rgba(30,34,40,.035); color: var(--ink); }
+  .nav-item.active { background: var(--surface); color: var(--ink); font-weight: 550; box-shadow: var(--shadow-card); }
+  .nav-item.active svg { color: var(--blue-deep); }
+  .nav .spacer { flex: 1; }
+  .nav-footer {
+    border-top: 1px solid var(--hairline);
+    margin: 0 -12px; padding: 12px 16px 2px;
+  }
+  .nav-footer .row { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--ink-3); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .dot.green { background: var(--green); box-shadow: 0 0 0 3px rgba(91,165,133,.18); }
+
+  .main { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .page { padding: 22px 28px 28px; overflow: hidden; display: flex; flex-direction: column; }
+  .page-head { display: flex; align-items: baseline; margin-bottom: 18px; }
+  .page-head h1 { font-size: 17px; font-weight: 600; letter-spacing: .01em; }
+  .page-head .sub { margin-left: 10px; font-size: 11.5px; color: var(--ink-3); }
+  .page-head .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+  /* ============ 通用控件 ============ */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 12px;
+    font-size: 12.5px; font-weight: 500;
+    border-radius: 7px; border: 1px solid var(--hairline);
+    background: var(--card); color: var(--ink-2);
+    box-shadow: 0 1px 2px rgba(30,34,40,.03);
+  }
+  .btn svg { width: 13px; height: 13px; stroke-width: 1.7; }
+  .btn:hover { color: var(--ink); border-color: rgba(30,34,40,.14); }
+  .btn.primary { background: var(--blue); border-color: transparent; color: #fff; box-shadow: 0 1px 3px rgba(78,111,160,.35); }
+  .btn.primary:hover { background: var(--blue-deep); color: #fff; }
+  .seg {
+    display: inline-flex; padding: 2px; gap: 2px;
+    background: rgba(30,34,40,.05); border-radius: 8px;
+  }
+  .seg button {
+    border: 0; background: transparent; padding: 4px 14px;
+    font-size: 12.5px; color: var(--ink-2); border-radius: 6px; font-family: inherit;
+  }
+  .seg button.on {
+    background: var(--card); color: var(--ink); font-weight: 550;
+    box-shadow: 0 1px 2px rgba(30,34,40,.08), 0 0 0 1px var(--hairline-2);
+  }
+  .switch { width: 34px; height: 20px; border-radius: 999px; background: rgba(30,34,40,.14); position: relative; flex: none; transition: background .15s; }
+  .switch::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; border-radius: 50%; background: #fff;
+    box-shadow: 0 1px 3px rgba(30,34,40,.25);
+    transition: transform .15s;
+  }
+  .switch.on { background: var(--blue); }
+  .switch.on::after { transform: translateX(14px); }
+  .search {
+    display: flex; align-items: center; gap: 8px;
+    height: 30px; padding: 0 11px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-radius: 7px; color: var(--ink-3); font-size: 12.5px;
+    box-shadow: 0 1px 2px rgba(30,34,40,.02);
+  }
+  .search svg { width: 13px; height: 13px; stroke-width: 1.7; }
+  .card { background: var(--card); border: 1px solid var(--hairline); border-radius: 10px; box-shadow: var(--shadow-card); }
+
+  /* ============ 首页 ============ */
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .stat-card { padding: 16px 18px 14px; }
+  .stat-label { font-size: 11px; letter-spacing: .10em; color: var(--ink-3); font-weight: 600; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; }
+  .stat-value { font-size: 21px; font-weight: 600; letter-spacing: -.01em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .stat-value small { font-size: 12px; font-weight: 500; color: var(--ink-3); margin-left: 4px; }
+  .stat-foot { font-size: 11.5px; color: var(--ink-3); margin-top: 5px; }
+  .stat-card .switch { margin-top: -2px; }
+
+  .traffic-card { margin-top: 14px; padding: 16px 18px 12px; }
+  .traffic-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .traffic-head .t { font-size: 12px; font-weight: 600; color: var(--ink-2); letter-spacing: .04em; }
+  .traffic-legend { display: flex; gap: 14px; font-size: 11px; color: var(--ink-3); }
+  .traffic-legend i { display: inline-block; width: 14px; height: 2px; border-radius: 1px; vertical-align: middle; margin-right: 5px; }
+
+  .home-cols { display: grid; grid-template-columns: 1.25fr 1fr; gap: 14px; margin-top: 14px; flex: 1; min-height: 0; }
+  .home-cols .card { display: flex; flex-direction: column; }
+  .home-cols .card .fill { flex: 1; }
+  .panel-head { padding: 12px 16px; border-bottom: 1px solid var(--hairline-2); display: flex; align-items: baseline; justify-content: space-between; }
+  .panel-head .t { font-size: 12px; font-weight: 600; color: var(--ink-2); letter-spacing: .04em; }
+  .panel-head .more { font-size: 11.5px; color: var(--ink-3); }
+  .kv { display: flex; align-items: center; padding: 9px 16px; font-size: 12.5px; border-bottom: 1px solid var(--hairline-2); }
+  .kv:last-child { border-bottom: 0; }
+  .kv .k { color: var(--ink-3); width: 86px; flex: none; font-size: 12px; }
+  .kv .v { color: var(--ink); font-weight: 500; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .kv .v.right { margin-left: auto; font-variant-numeric: tabular-nums; }
+  .meter { height: 4px; border-radius: 2px; background: rgba(30,34,40,.06); overflow: hidden; margin: 2px 16px 12px; }
+  .meter i { display: block; height: 100%; width: 38%; background: var(--blue); border-radius: 2px; }
+
+  .proxy-mini { display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid var(--hairline-2); font-size: 12.5px; }
+  .proxy-mini:last-child { border-bottom: 0; }
+  .proxy-mini .g { font-weight: 550; }
+  .proxy-mini .arrow { color: var(--ink-3); }
+  .proxy-mini .n { color: var(--ink-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lat { margin-left: auto; font-size: 11.5px; font-variant-numeric: tabular-nums; font-weight: 550; }
+  .lat.g { color: var(--green); } .lat.a { color: var(--amber); } .lat.r { color: var(--red); }
+
+  /* ============ 代理页 ============ */
+  .proxy-layout { display: flex; flex: 1; min-height: 0; }
+  .group-list {
+    width: 232px; flex: none; border-right: 1px solid var(--hairline);
+    padding: 14px 12px; overflow: hidden;
+  }
+  .group-item {
+    padding: 9px 12px; border-radius: 8px; margin-bottom: 2px;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .group-item:hover { background: rgba(30,34,40,.03); }
+  .group-item.active { background: var(--card); box-shadow: var(--shadow-card); }
+  .group-item .gi { flex: 1; min-width: 0; }
+  .group-item .name { font-size: 13px; font-weight: 550; display: flex; align-items: center; gap: 7px; }
+  .group-item .cur { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .group-item .cnt { font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+  .node-area { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; }
+  .node-toolbar {
+    flex: none; display: flex; align-items: center; gap: 10px;
+    padding: 16px 24px 14px; border-bottom: 1px solid var(--hairline-2);
+  }
+  .node-toolbar h2 { font-size: 15px; font-weight: 600; }
+  .node-toolbar .meta { font-size: 11.5px; color: var(--ink-3); }
+  .node-scroll { padding: 6px 24px 24px; }
+  .region { margin-top: 16px; }
+  .region-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 9px; }
+  .region-h .code { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--blue-deep); }
+  .region-h .name { font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .region-h .cnt { font-size: 11px; color: var(--ink-3); }
+  .region-h .line { flex: 1; height: 1px; background: var(--hairline-2); align-self: center; margin-left: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 32px; padding: 0 12px;
+    background: var(--card); border: 1px solid var(--hairline);
+    border-radius: 8px; font-size: 12.5px; color: var(--ink);
+    box-shadow: 0 1px 2px rgba(30,34,40,.02);
+  }
+  .chip .ms { font-size: 11px; font-variant-numeric: tabular-nums; font-weight: 550; }
+  .chip .ms.g { color: var(--green); } .chip .ms.a { color: var(--amber); } .chip .ms.r { color: var(--red); }
+  .chip:hover { border-color: rgba(30,34,40,.16); }
+  .chip.sel {
+    background: var(--blue-ghost);
+    border-color: rgba(110,147,196,.55);
+    box-shadow: 0 0 0 1px rgba(110,147,196,.35), 0 1px 3px rgba(78,111,160,.12);
+    font-weight: 550;
+  }
+  .chip.sel::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--blue); flex: none;
+  }
+  .chip.timeout { color: var(--ink-3); }
+  .chip.timeout .ms { color: var(--ink-3); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- ================= 窗口一：首页 ================= -->
+  <div>
+    <div class="win">
+      <div class="titlebar">
+        <div class="brand"><b>Zephyr</b><span class="ver">0.1.0 · mihomo v1.19.31</span></div>
+        <div class="title-spacer"></div>
+        <div class="winbtns">
+          <span><svg viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor" stroke-width="1"/></svg></span>
+          <span><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/></svg></span>
+          <span class="close"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1"/></svg></span>
+        </div>
+      </div>
+      <div class="body">
+        <div class="nav">
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10.5L12 3l9 7.5V21H3z" stroke-linejoin="round"/></svg>
+            概览
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+            代理
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg>
+            订阅
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17L17 7M17 7h-6M17 7v6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
+            连接
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h11l3 3v13H5z" stroke-linejoin="round"/><path d="M9 9h6M9 13h6M9 17h4" stroke-linecap="round"/></svg>
+            日志
+          </div>
+          <div class="spacer"></div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1" stroke-linecap="round"/></svg>
+            设置
+          </div>
+          <div class="nav-footer">
+            <div class="row"><span class="dot green"></span>内核运行中 · 内存 42 MB</div>
+          </div>
+        </div>
+
+        <div class="main">
+          <div class="page">
+            <div class="page-head">
+              <h1>概览</h1>
+              <span class="sub">已连接 2 小时 14 分钟</span>
+              <div class="right">
+                <div class="seg"><button class="on">规则</button><button>全局</button><button>直连</button></div>
+              </div>
+            </div>
+
+            <div class="status-grid">
+              <div class="card stat-card">
+                <div class="stat-label">系统代理<span class="switch on"></span></div>
+                <div class="stat-value">127.0.0.1:7897</div>
+                <div class="stat-foot">混合端口 · 已设置为系统代理</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-label">TUN 模式<span class="switch"></span></div>
+                <div class="stat-value" style="color:var(--ink-3)">未启用</div>
+                <div class="stat-foot">虚拟网卡接管全部流量</div>
+              </div>
+              <div class="card stat-card">
+                <div class="stat-label">活动连接</div>
+                <div class="stat-value">36<small>条</small></div>
+                <div class="stat-foot">上传 1.2 GB · 下载 8.7 GB</div>
+              </div>
+            </div>
+
+            <div class="card traffic-card">
+              <div class="traffic-head">
+                <span class="t">实时流量</span>
+                <div class="traffic-legend">
+                  <span><i style="background:var(--blue)"></i>下行 2.41 MB/s</span>
+                  <span><i style="background:#B9C7DC"></i>上行 316 KB/s</span>
+                </div>
+              </div>
+              <svg viewBox="0 0 820 120" width="100%" height="110" preserveAspectRatio="none">
+                <line x1="0" y1="30" x2="820" y2="30" stroke="rgba(30,34,40,.05)"/>
+                <line x1="0" y1="60" x2="820" y2="60" stroke="rgba(30,34,40,.05)"/>
+                <line x1="0" y1="90" x2="820" y2="90" stroke="rgba(30,34,40,.05)"/>
+                <path d="M0,84 L40,80 L80,86 L120,64 L160,70 L200,48 L240,58 L280,40 L320,52 L360,30 L400,44 L440,26 L480,38 L520,22 L560,34 L600,18 L640,30 L680,24 L720,32 L760,20 L820,26 L820,120 L0,120 Z" fill="rgba(110,147,196,.10)"/>
+                <path d="M0,84 L40,80 L80,86 L120,64 L160,70 L200,48 L240,58 L280,40 L320,52 L360,30 L400,44 L440,26 L480,38 L520,22 L560,34 L600,18 L640,30 L680,24 L720,32 L760,20 L820,26" fill="none" stroke="#6E93C4" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M0,104 L40,100 L80,106 L120,98 L160,102 L200,94 L240,100 L280,92 L320,98 L360,90 L400,96 L440,88 L480,94 L520,90 L560,94 L600,88 L640,92 L680,90 L720,94 L760,88 L820,92" fill="none" stroke="#B9C7DC" stroke-width="1.4" stroke-linejoin="round"/>
+              </svg>
+            </div>
+
+            <div class="home-cols">
+              <div class="card">
+                <div class="panel-head"><span class="t">当前订阅</span><span class="more">全部 →</span></div>
+                <div class="kv"><span class="k">名称</span><span class="v">Acme Cloud · 主力</span><span class="v right" style="color:var(--green);font-size:11.5px">● 已启用</span></div>
+                <div class="kv"><span class="k">流量</span><span class="v">已用 186.4 GB / 500 GB</span></div>
+                <div class="meter"><i></i></div>
+                <div class="kv"><span class="k">到期</span><span class="v">2026-11-30 · 剩 70 天</span></div>
+                <div class="kv"><span class="k">自动更新</span><span class="v">每 24 小时 · 下次 明早 08:12</span></div>
+                <div class="kv"><span class="k">上次更新</span><span class="v">今天 08:12</span><span class="v right" style="color:var(--blue-deep);font-size:11.5px">立即更新</span></div>
+              </div>
+              <div class="card">
+                <div class="panel-head"><span class="t">策略组</span><span class="more">代理 →</span></div>
+                <div class="proxy-mini"><span class="g">节点选择</span><span class="arrow">→</span><span class="n">香港 04 · IEPL</span><span class="lat g">28 ms</span></div>
+                <div class="proxy-mini"><span class="g">流媒体</span><span class="arrow">→</span><span class="n">台湾 02 · Netflix</span><span class="lat g">61 ms</span></div>
+                <div class="proxy-mini"><span class="g">AI 服务</span><span class="arrow">→</span><span class="n">美国 06 · 原生IP</span><span class="lat a">142 ms</span></div>
+                <div class="proxy-mini"><span class="g">电报消息</span><span class="arrow">→</span><span class="n">新加坡 01</span><span class="lat g">42 ms</span></div>
+                <div class="proxy-mini"><span class="g">漏网之鱼</span><span class="arrow">→</span><span class="n">DIRECT</span><span class="lat g">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="win-label">OVERVIEW — 概览</div>
+  </div>
+
+  <!-- ================= 窗口二：代理页 ================= -->
+  <div>
+    <div class="win">
+      <div class="titlebar">
+        <div class="brand"><b>Zephyr</b><span class="ver">0.1.0 · mihomo v1.19.31</span></div>
+        <div class="title-spacer"></div>
+        <div class="winbtns">
+          <span><svg viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor" stroke-width="1"/></svg></span>
+          <span><svg viewBox="0 0 12 12"><rect x="2" y="2" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/></svg></span>
+          <span class="close"><svg viewBox="0 0 12 12"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7" stroke="currentColor" stroke-width="1"/></svg></span>
+        </div>
+      </div>
+      <div class="body">
+        <div class="nav">
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10.5L12 3l9 7.5V21H3z" stroke-linejoin="round"/></svg>
+            概览
+          </div>
+          <div class="nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/></svg>
+            代理
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 12h16M4 18h10" stroke-linecap="round"/></svg>
+            订阅
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17L17 7M17 7h-6M17 7v6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="4"/></svg>
+            连接
+          </div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 4h11l3 3v13H5z" stroke-linejoin="round"/><path d="M9 9h6M9 13h6M9 17h4" stroke-linecap="round"/></svg>
+            日志
+          </div>
+          <div class="spacer"></div>
+          <div class="nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1" stroke-linecap="round"/></svg>
+            设置
+          </div>
+          <div class="nav-footer">
+            <div class="row"><span class="dot green"></span>内核运行中 · 内存 42 MB</div>
+          </div>
+        </div>
+
+        <div class="main">
+          <div class="proxy-layout">
+            <div class="group-list">
+              <div class="group-item active">
+                <div class="gi">
+                  <div class="name">节点选择</div>
+                  <div class="cur">香港 04 · IEPL</div>
+                </div>
+                <span class="cnt">47</span>
+              </div>
+              <div class="group-item">
+                <div class="gi">
+                  <div class="name">自动选择</div>
+                  <div class="cur">香港 02 · IPLC</div>
+                </div>
+                <span class="cnt">47</span>
+              </div>
+              <div class="group-item">
+                <div class="gi">
+                  <div class="name">流媒体</div>
+                  <div class="cur">台湾 02 · Netflix</div>
+                </div>
+                <span class="cnt">23</span>
+              </div>
+              <div class="group-item">
+                <div class="gi">
+                  <div class="name">AI 服务</div>
+                  <div class="cur">美国 06 · 原生IP</div>
+                </div>
+                <span class="cnt">12</span>
+              </div>
+              <div class="group-item">
+                <div class="gi">
+                  <div class="name">电报消息</div>
+                  <div class="cur">新加坡 01</div>
+                </div>
+                <span class="cnt">18</span>
+              </div>
+              <div class="group-item">
+                <div class="gi">
+                  <div class="name">漏网之鱼</div>
+                  <div class="cur">DIRECT</div>
+                </div>
+                <span class="cnt">3</span>
+              </div>
+            </div>
+
+            <div class="node-area">
+              <div class="node-toolbar">
+                <h2>节点选择</h2>
+                <span class="meta">47 个节点 · 当前：香港 04 · IEPL</span>
+                <div style="flex:1"></div>
+                <div class="search" style="width:180px">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+                  搜索节点
+                </div>
+                <button class="btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 3L4 14h6l-1 7 9-11h-6z" stroke-linejoin="round"/></svg>
+                  测速
+                </button>
+                <button class="btn primary">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  更新
+                </button>
+              </div>
+
+              <div class="node-scroll">
+                <div class="region">
+                  <div class="region-h"><span class="code">HK</span><span class="name">香港</span><span class="cnt">12</span><span class="line"></span></div>
+                  <div class="chips">
+                    <span class="chip">香港 01 · IEPL<span class="ms g">24</span></span>
+                    <span class="chip">香港 02 · IPLC<span class="ms g">26</span></span>
+                    <span class="chip">香港 03 · IEPL<span class="ms g">27</span></span>
+                    <span class="chip sel">香港 04 · IEPL<span class="ms g">28</span></span>
+                    <span class="chip">香港 05 · BGP<span class="ms g">31</span></span>
+                    <span class="chip">香港 06 · 专线<span class="ms g">33</span></span>
+                    <span class="chip">香港 07 · IEPL<span class="ms g">36</span></span>
+                    <span class="chip">香港 08 · 标准<span class="ms a">58</span></span>
+                    <span class="chip">香港 09 · 标准<span class="ms a">64</span></span>
+                    <span class="chip">香港 10 · 游戏<span class="ms g">29</span></span>
+                    <span class="chip">香港 11 · 倍率0.5<span class="ms a">77</span></span>
+                    <span class="chip timeout">香港 12 · 备用<span class="ms">超时</span></span>
+                  </div>
+                </div>
+                <div class="region">
+                  <div class="region-h"><span class="code">SG</span><span class="name">新加坡</span><span class="cnt">9</span><span class="line"></span></div>
+                  <div class="chips">
+                    <span class="chip">新加坡 01<span class="ms g">42</span></span>
+                    <span class="chip">新加坡 02<span class="ms g">45</span></span>
+                    <span class="chip">新加坡 03<span class="ms a">58</span></span>
+                    <span class="chip">新加坡 04 · 流媒体<span class="ms a">61</span></span>
+                    <span class="chip">新加坡 05<span class="ms a">73</span></span>
+                    <span class="chip">新加坡 06<span class="ms r">186</span></span>
+                    <span class="chip timeout">新加坡 07<span class="ms">超时</span></span>
+                    <span class="chip timeout">新加坡 08<span class="ms">超时</span></span>
+                  </div>
+                </div>
+                <div class="region">
+                  <div class="region-h"><span class="code">JP</span><span class="name">日本</span><span class="cnt">10</span><span class="line"></span></div>
+                  <div class="chips">
+                    <span class="chip">日本 01 · IEPL<span class="ms g">38</span></span>
+                    <span class="chip">日本 02 · IEPL<span class="ms g">41</span></span>
+                    <span class="chip">日本 03<span class="ms a">55</span></span>
+                    <span class="chip">日本 04 · 流媒体<span class="ms a">63</span></span>
+                    <span class="chip">日本 05<span class="ms a">79</span></span>
+                    <span class="chip">日本 06 · 游戏<span class="ms g">44</span></span>
+                    <span class="chip">日本 07<span class="ms r">152</span></span>
+                    <span class="chip timeout">日本 08<span class="ms">超时</span></span>
+                  </div>
+                </div>
+                <div class="region">
+                  <div class="region-h"><span class="code">US</span><span class="name">美国</span><span class="cnt">12</span><span class="line"></span></div>
+                  <div class="chips">
+                    <span class="chip">美国 01 · 原生IP<span class="ms a">138</span></span>
+                    <span class="chip">美国 02<span class="ms a">141</span></span>
+                    <span class="chip">美国 03 · 流媒体<span class="ms a">146</span></span>
+                    <span class="chip">美国 04<span class="ms r">189</span></span>
+                    <span class="chip">美国 05<span class="ms r">203</span></span>
+                    <span class="chip">美国 06 · 原生IP<span class="ms a">142</span></span>
+                    <span class="chip">美国 07 · CN2<span class="ms a">158</span></span>
+                    <span class="chip timeout">美国 08<span class="ms">超时</span></span>
+                  </div>
+                </div>
+                <div class="region">
+                  <div class="region-h"><span class="code">TW</span><span class="name">台湾</span><span class="cnt">4</span><span class="line"></span></div>
+                  <div class="chips">
+                    <span class="chip">台湾 01<span class="ms g">48</span></span>
+                    <span class="chip">台湾 02 · Netflix<span class="ms a">61</span></span>
+                    <span class="chip">台湾 03<span class="ms a">72</span></span>
+                    <span class="chip timeout">台湾 04<span class="ms">超时</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="win-label">PROXIES — 代理</div>
+  </div>
+
+</div>
+</body>
+</html>

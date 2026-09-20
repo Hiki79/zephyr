@@ -1,0 +1,546 @@
+<title>Zephyr 效果图</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  :root{
+    /* page chrome (follows viewer theme) */
+    --ground:#E9E9E3; --ink:#1F2024; --muted:#6B6F76; --frame-shadow:0 18px 50px rgba(31,32,36,.14), 0 1px 0 rgba(31,32,36,.06);
+    /* app tokens: the app itself is a light-only design, so these stay fixed */
+    --canvas:#F6F6F1; --card:#FFFFFF; --line:#E6E6E0; --line-2:#D9D9D2; --hover:#EFEFEA; --seg:#ECECE6;
+    --text:#1F2024; --text-2:#6B6F76; --text-3:#9A9EA6;
+    --accent:#4F6BED; --accent-hover:#3F5AD9; --accent-soft:#EEF1FD; --accent-line:#C7D0FA;
+    --charcoal:#1F2024; --on-dark:#FFFFFF; --on-dark-2:rgba(255,255,255,.62); --on-dark-3:rgba(255,255,255,.34); --grid:rgba(255,255,255,.09); --chart:#7D8FFF;
+    --good:#22C55E; --warn:#F59E0B; --bad:#EF4444;
+    --font:"Segoe UI Variable Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --ground:#16171A; --ink:#ECECEA; --muted:#9A9EA6; --frame-shadow:0 18px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06); }
+  }
+  :root[data-theme="dark"]{ --ground:#16171A; --ink:#ECECEA; --muted:#9A9EA6; --frame-shadow:0 18px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06); }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+  button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  h1,h2,h3,h4{margin:0;font-weight:600;text-wrap:balance}
+  .num{font-variant-numeric:tabular-nums}
+
+  .page{max-width:1244px;margin:0 auto;padding-block:36px 56px;padding-inline:16px;display:grid;gap:36px}
+  .intro h1{font-size:22px;letter-spacing:-.01em}
+  .intro p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+  .swatches{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+  .swatches li{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+  .swatches i{width:22px;height:22px;border-radius:6px;border:1px solid rgba(31,32,36,.12);display:inline-block}
+  .swatches b{font-weight:500;color:var(--ink)}
+  .swatches code{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+
+  .shot{display:grid;gap:10px}
+  .shot-label{display:flex;align-items:baseline;gap:10px;font-size:13px;color:var(--muted)}
+  .shot-label b{font-size:15px;font-weight:600;color:var(--ink)}
+  .fit{position:relative;overflow:hidden}
+  .win{width:1180px;height:780px;transform-origin:0 0;position:absolute;left:0;top:0;background:var(--canvas);color:var(--text);border-radius:10px;overflow:hidden;box-shadow:var(--frame-shadow);display:flex;flex-direction:column}
+
+  /* ---- icons ---- */
+  .ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+  .ic.sm{width:14px;height:14px}
+  .ic.xs{width:12px;height:12px;stroke-width:2}
+
+  /* ---- title bar (Windows 11 caption) ---- */
+  .titlebar{height:40px;flex:none;display:flex;align-items:center;border-bottom:1px solid var(--line);padding-left:14px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;letter-spacing:.01em}
+  .mark{width:18px;height:18px;border-radius:5px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+  .drag{flex:1;height:100%}
+  .tb-actions{display:flex;gap:2px;margin-right:6px}
+  .tb-btn{width:32px;height:28px;border-radius:6px;display:grid;place-items:center;color:var(--text-2)}
+  .tb-btn:hover{background:var(--hover);color:var(--text)}
+  .caption{display:flex;height:100%}
+  .cap{width:46px;height:100%;display:grid;place-items:center;color:var(--text)}
+  .cap svg{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:1}
+  .cap:hover{background:var(--hover)}
+  .cap.close:hover{background:#C42B1C;color:#fff}
+
+  /* ---- body: rail + columns ---- */
+  .body{flex:1;display:flex;min-height:0}
+  .rail{width:60px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:6px}
+  .rail-btn{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:var(--text-2)}
+  .rail-btn:hover{background:var(--hover);color:var(--text)}
+  .rail-btn.active{background:var(--accent-soft);color:var(--accent)}
+  .rail .spacer{flex:1}
+
+  /* ---- shared controls ---- */
+  .btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:8px;border:1px solid var(--line-2);background:var(--card);font-size:13px;color:var(--text);white-space:nowrap}
+  .btn:hover{background:var(--hover)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-hover)}
+  .btn.danger{color:var(--bad);border-color:#F3C1C1}
+  .btn.sm{height:26px;padding:0 10px;font-size:12.5px}
+  .icon-btn{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;color:var(--text-2);border:1px solid var(--line-2);background:var(--card)}
+  .icon-btn:hover{background:var(--hover);color:var(--text)}
+  .tag{display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:5px;background:var(--seg);color:var(--text-2);font-size:11.5px;font-weight:500;letter-spacing:.02em}
+  .tag.blue{background:var(--accent-soft);color:var(--accent)}
+  .switch{width:38px;height:22px;border-radius:11px;background:var(--line-2);position:relative;flex:none;transition:background .15s}
+  .switch::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.18);transition:left .15s}
+  .switch.on{background:var(--accent)}
+  .switch.on::after{left:18px}
+  .switch.sm{width:30px;height:18px}
+  .switch.sm::after{width:14px;height:14px}
+  .switch.sm.on::after{left:14px}
+  .seg{display:inline-flex;background:var(--seg);padding:2px;border-radius:8px;gap:2px}
+  .seg button{height:26px;padding:0 12px;border-radius:6px;font-size:12.5px;color:var(--text-2)}
+  .seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 1px rgba(31,32,36,.06);border:1px solid var(--line)}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--text-3);display:inline-block;flex:none}
+  .dot.on{background:var(--good)}
+  .ms{font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ms.ok{color:var(--good)} .ms.mid{color:var(--warn)} .ms.bad{color:var(--bad)} .ms.none{color:var(--text-3)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px}
+
+  /* ================= HOME ================= */
+  .home{flex:1;min-width:0;overflow:auto;padding:22px 28px 28px;display:grid;gap:16px;align-content:start}
+  .page-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+  .page-head h2{font-size:18px}
+  .page-head .meta{color:var(--text-2);font-size:12.5px}
+
+  .dark-card{background:var(--charcoal);color:var(--on-dark);border-radius:14px;padding:20px 22px 14px;display:grid;gap:10px}
+  .dc-top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+  .status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--on-dark-2)}
+  .status .dot{width:8px;height:8px;box-shadow:0 0 0 3px rgba(34,197,94,.18)}
+  .status b{color:var(--on-dark);font-weight:600}
+  .speeds{display:flex;gap:34px}
+  .speed{display:grid;gap:2px;justify-items:end}
+  .speed .lbl{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--on-dark-2)}
+  .speed .val{display:flex;align-items:baseline;gap:5px}
+  .speed .n{font-size:28px;font-weight:600;line-height:1;letter-spacing:-.02em}
+  .speed .u{font-size:12px;color:var(--on-dark-2)}
+  .chart{width:100%;height:auto;display:block;margin-top:4px}
+  .chart text{font-family:var(--font);font-size:11px;fill:var(--on-dark-3)}
+  .dc-foot{display:flex;gap:22px;font-size:12px;color:var(--on-dark-2);border-top:1px solid var(--grid);padding-top:10px}
+  .dc-foot b{color:var(--on-dark);font-weight:500}
+  .dc-foot .right{margin-left:auto}
+
+  .ctrl-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .ctrl{display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:72px}
+  .ctrl-ico{width:36px;height:36px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+  .ctrl-ico.off{background:var(--seg);color:var(--text-2)}
+  .ctrl-text{flex:1;min-width:0}
+  .ctrl-title{font-weight:600;font-size:14px}
+  .ctrl-sub{font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0}
+  .card-head h3{font-size:14px}
+  .card-head .link{display:inline-flex;align-items:center;gap:2px;font-size:12.5px;color:var(--accent);text-decoration:none}
+  .kv-list{padding:10px 16px 16px;display:grid;gap:8px}
+  .kv{display:grid;grid-template-columns:82px 1fr;gap:10px;font-size:13px;align-items:baseline}
+  .kv span{color:var(--text-2)}
+  .kv b{font-weight:500;font-variant-numeric:tabular-nums}
+  .bar{height:6px;border-radius:3px;background:var(--accent-soft);overflow:hidden;grid-column:2}
+  .bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+  .glist{list-style:none;margin:0;padding:6px 8px 8px;display:grid}
+  .glist li{display:grid;grid-template-columns:88px 1fr auto 14px;align-items:center;gap:10px;padding:8px;border-radius:8px;font-size:13px}
+  .glist li:hover{background:var(--hover)}
+  .glist .g{color:var(--text-2)}
+  .glist .n{display:flex;align-items:center;gap:7px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .glist .chev{color:var(--text-3)}
+
+  /* ================= PROXIES ================= */
+  .col{width:300px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .col-head{display:flex;align-items:center;gap:8px;padding:18px 16px 10px}
+  .col-head h2{font-size:15px}
+  .col-head .count{font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .col-head .icon-btn{margin-left:auto}
+  .groups{list-style:none;margin:0;padding:0 10px 10px;display:grid;gap:2px;overflow:auto}
+  .grp{padding:10px 12px;border-radius:10px;display:grid;gap:3px;cursor:pointer}
+  .grp:hover{background:var(--hover)}
+  .grp.sel{background:var(--accent-soft)}
+  .grp-row{display:flex;align-items:center;gap:6px}
+  .grp-name{font-weight:600;font-size:13.5px;flex:1;min-width:0}
+  .grp-sub{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .detail{flex:1;min-width:0;overflow:auto;padding:18px 24px 28px;display:grid;gap:16px;align-content:start}
+  .det-head{display:flex;align-items:center;gap:14px}
+  .det-ico{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+  .det-titles{flex:1;min-width:0;display:grid;gap:2px}
+  .det-name{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:600}
+  .det-sub{font-size:12.5px;color:var(--text-2);font-variant-numeric:tabular-nums}
+  .det-sub b{color:var(--text);font-weight:500}
+  .det-actions{display:flex;align-items:center;gap:8px}
+  .mini-toggle{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-2);margin-left:6px}
+
+  .search{display:flex;height:36px;border:1px solid var(--line-2);border-radius:9px;background:var(--card);overflow:hidden}
+  .search input{flex:1;border:0;background:none;padding:0 12px;font:inherit;font-size:13.5px;color:var(--text);min-width:0}
+  .search input::placeholder{color:var(--text-3)}
+  .search button{width:42px;border-left:1px solid var(--line);display:grid;place-items:center;color:var(--text-2)}
+  .search button:hover{background:var(--hover)}
+
+  .region{display:grid;gap:10px}
+  .region-head{display:flex;align-items:center;gap:8px}
+  .rc{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--text-2);background:var(--seg);border-radius:4px;padding:2px 5px;line-height:1.2}
+  .region-head h4{font-size:13.5px}
+  .region-head .cnt{font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .region-head .avg{margin-left:auto;font-size:12px;color:var(--text-3);font-variant-numeric:tabular-nums}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:13px;color:var(--text)}
+  .chip:hover{border-color:var(--line-2);background:var(--hover)}
+  .chip.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:500}
+  .chip.sel .ms{color:var(--accent)}
+  .chip.to{color:var(--text-3)}
+  .chip .ms::after{content:" ms";font-size:10.5px;opacity:.8}
+  .chip .ms.none::after{content:""}
+
+  /* ---- notes ---- */
+  .notes{color:var(--muted);font-size:13.5px;max-width:70ch}
+  .notes h2{font-size:15px;color:var(--ink);margin-bottom:8px}
+  .notes ul{margin:0;padding-left:18px;display:grid;gap:6px}
+  .notes li b{color:var(--ink);font-weight:500}
+
+  @media (max-width:640px){ .page{gap:28px} }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></symbol>
+</svg>
+
+<div class="page">
+
+  <header class="intro">
+    <h1>Zephyr 效果图</h1>
+    <p>纸面三栏，米白画布、白色卡片、一块炭黑、一个靛蓝。按 1180 × 780 的窗口画的，两屏：首页和代理页。手机上会整体缩小，可放大看细节。</p>
+    <ul class="swatches">
+      <li><i style="background:#F6F6F1"></i><b>画布</b><code>#F6F6F1</code></li>
+      <li><i style="background:#FFFFFF"></i><b>卡片</b><code>#FFFFFF</code></li>
+      <li><i style="background:#E6E6E0"></i><b>分隔线</b><code>#E6E6E0</code></li>
+      <li><i style="background:#1F2024"></i><b>炭黑 / 主文字</b><code>#1F2024</code></li>
+      <li><i style="background:#6B6F76"></i><b>次文字</b><code>#6B6F76</code></li>
+      <li><i style="background:#4F6BED"></i><b>强调蓝</b><code>#4F6BED</code></li>
+      <li><i style="background:#EEF1FD"></i><b>选中淡蓝</b><code>#EEF1FD</code></li>
+      <li><i style="background:#7D8FFF"></i><b>炭黑上的曲线</b><code>#7D8FFF</code></li>
+    </ul>
+  </header>
+
+  <!-- ============ 首页 ============ -->
+  <section class="shot">
+    <div class="shot-label"><b>首页</b>状态、开关、订阅、常用策略组。炭黑只这一块。</div>
+    <div class="fit">
+      <div class="win" role="img" aria-label="首页效果图">
+        <div class="titlebar">
+          <div class="brand"><span class="mark">Z</span>Zephyr</div>
+          <div class="drag"></div>
+          <div class="tb-actions">
+            <button class="tb-btn" title="复制终端代理命令"><svg class="ic sm"><use href="#i-terminal"/></svg></button>
+            <button class="tb-btn" title="打开配置目录"><svg class="ic sm"><use href="#i-folder"/></svg></button>
+            <button class="tb-btn" title="GitHub"><svg class="ic sm"><use href="#i-github"/></svg></button>
+          </div>
+          <div class="caption">
+            <button class="cap" title="最小化"><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></button>
+            <button class="cap" title="最大化"><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" rx="1"/></svg></button>
+            <button class="cap close" title="关闭"><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></button>
+          </div>
+        </div>
+        <div class="body">
+          <nav class="rail" aria-label="导航">
+            <a class="rail-btn active" title="首页"><svg class="ic"><use href="#i-home"/></svg></a>
+            <a class="rail-btn" title="代理"><svg class="ic"><use href="#i-globe"/></svg></a>
+            <a class="rail-btn" title="订阅"><svg class="ic"><use href="#i-layers"/></svg></a>
+            <a class="rail-btn" title="连接"><svg class="ic"><use href="#i-activity"/></svg></a>
+            <a class="rail-btn" title="日志"><svg class="ic"><use href="#i-file"/></svg></a>
+            <span class="spacer"></span>
+            <a class="rail-btn" title="设置"><svg class="ic"><use href="#i-settings"/></svg></a>
+          </nav>
+
+          <main class="home">
+            <div class="page-head">
+              <h2>总览</h2>
+              <div class="meta num">mihomo v1.19.31 · 已运行 3 小时 12 分</div>
+            </div>
+
+            <section class="dark-card">
+              <div class="dc-top">
+                <div class="status"><span class="dot on"></span><b>内核运行中</b>· 混合端口 7897 · 控制端口 9090</div>
+                <div class="speeds">
+                  <div class="speed">
+                    <span class="lbl"><svg class="ic xs"><use href="#i-up"/></svg>上行</span>
+                    <span class="val"><span class="n num" id="up-now">1.2</span><span class="u">MB/s</span></span>
+                  </div>
+                  <div class="speed">
+                    <span class="lbl"><svg class="ic xs"><use href="#i-down"/></svg>下行</span>
+                    <span class="val"><span class="n num" id="down-now">8.4</span><span class="u">MB/s</span></span>
+                  </div>
+                </div>
+              </div>
+              <svg class="chart" id="traffic" viewBox="0 0 1020 150" aria-label="最近 60 秒流量"></svg>
+              <div class="dc-foot num">
+                <span>今日 <b>↑ 312 MB</b> · <b>↓ 4.2 GB</b></span>
+                <span>活动连接 <b>47</b></span>
+                <span>内存 <b>86 MB</b></span>
+                <span class="right">最近 60 秒</span>
+              </div>
+            </section>
+
+            <div class="ctrl-row">
+              <div class="card ctrl">
+                <div class="ctrl-ico"><svg class="ic"><use href="#i-monitor"/></svg></div>
+                <div class="ctrl-text"><div class="ctrl-title">系统代理</div><div class="ctrl-sub">127.0.0.1:7897 · 已接管</div></div>
+                <button class="switch on" role="switch" aria-checked="true" aria-label="系统代理"></button>
+              </div>
+              <div class="card ctrl">
+                <div class="ctrl-ico off"><svg class="ic"><use href="#i-shield"/></svg></div>
+                <div class="ctrl-text"><div class="ctrl-title">TUN 模式</div><div class="ctrl-sub">接管所有流量，需要管理员权限</div></div>
+                <button class="switch" role="switch" aria-checked="false" aria-label="TUN 模式"></button>
+              </div>
+              <div class="card ctrl">
+                <div class="ctrl-ico"><svg class="ic"><use href="#i-route"/></svg></div>
+                <div class="ctrl-text"><div class="ctrl-title">出站模式</div><div class="ctrl-sub">按规则分流</div></div>
+                <div class="seg" role="radiogroup" aria-label="出站模式"><button class="on">规则</button><button>全局</button><button>直连</button></div>
+              </div>
+            </div>
+
+            <div class="two-col">
+              <section class="card">
+                <div class="card-head"><h3>当前订阅</h3><button class="btn sm"><svg class="ic xs"><use href="#i-refresh"/></svg>更新</button></div>
+                <div class="kv-list">
+                  <div class="kv"><span>名称</span><b>Nya Cloud（示例）</b></div>
+                  <div class="kv"><span>已用流量</span><b>78.4 GB / 200 GB</b></div>
+                  <div class="kv"><span></span><div class="bar"><i style="width:39.2%"></i></div></div>
+                  <div class="kv"><span>到期</span><b>2026-12-01 · 剩 71 天</b></div>
+                  <div class="kv"><span>上次更新</span><b>2 小时前 · 每 24 小时自动更新</b></div>
+                </div>
+              </section>
+              <section class="card">
+                <div class="card-head"><h3>常用策略组</h3><a class="link" href="#">全部 <svg class="ic xs"><use href="#i-chev"/></svg></a></div>
+                <ul class="glist">
+                  <li><span class="g">节点选择</span><span class="n"><i class="dot on"></i>香港 IEPL 01</span><span class="ms ok">42 ms</span><svg class="ic xs chev"><use href="#i-chev"/></svg></li>
+                  <li><span class="g">流媒体</span><span class="n"><i class="dot on"></i>新加坡 02</span><span class="ms ok">88 ms</span><svg class="ic xs chev"><use href="#i-chev"/></svg></li>
+                  <li><span class="g">AI 服务</span><span class="n"><i class="dot on"></i>美国 洛杉矶 03</span><span class="ms mid">168 ms</span><svg class="ic xs chev"><use href="#i-chev"/></svg></li>
+                  <li><span class="g">微软服务</span><span class="n"><i class="dot"></i>DIRECT</span><span class="ms none">直连</span><svg class="ic xs chev"><use href="#i-chev"/></svg></li>
+                </ul>
+              </section>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 代理页 ============ -->
+  <section class="shot">
+    <div class="shot-label"><b>代理</b>左栏策略组，右边按地区分组的节点 chip，选中为蓝描边。</div>
+    <div class="fit">
+      <div class="win" role="img" aria-label="代理页效果图">
+        <div class="titlebar">
+          <div class="brand"><span class="mark">Z</span>Zephyr</div>
+          <div class="drag"></div>
+          <div class="tb-actions">
+            <button class="tb-btn" title="复制终端代理命令"><svg class="ic sm"><use href="#i-terminal"/></svg></button>
+            <button class="tb-btn" title="打开配置目录"><svg class="ic sm"><use href="#i-folder"/></svg></button>
+            <button class="tb-btn" title="GitHub"><svg class="ic sm"><use href="#i-github"/></svg></button>
+          </div>
+          <div class="caption">
+            <button class="cap" title="最小化"><svg viewBox="0 0 10 10"><path d="M0 5h10"/></svg></button>
+            <button class="cap" title="最大化"><svg viewBox="0 0 10 10"><rect x=".5" y=".5" width="9" height="9" rx="1"/></svg></button>
+            <button class="cap close" title="关闭"><svg viewBox="0 0 10 10"><path d="M0 0l10 10M10 0L0 10"/></svg></button>
+          </div>
+        </div>
+        <div class="body">
+          <nav class="rail" aria-label="导航">
+            <a class="rail-btn" title="首页"><svg class="ic"><use href="#i-home"/></svg></a>
+            <a class="rail-btn active" title="代理"><svg class="ic"><use href="#i-globe"/></svg></a>
+            <a class="rail-btn" title="订阅"><svg class="ic"><use href="#i-layers"/></svg></a>
+            <a class="rail-btn" title="连接"><svg class="ic"><use href="#i-activity"/></svg></a>
+            <a class="rail-btn" title="日志"><svg class="ic"><use href="#i-file"/></svg></a>
+            <span class="spacer"></span>
+            <a class="rail-btn" title="设置"><svg class="ic"><use href="#i-settings"/></svg></a>
+          </nav>
+
+          <aside class="col">
+            <div class="col-head"><h2>策略组</h2><span class="count">8</span><button class="icon-btn" title="全部测速"><svg class="ic sm"><use href="#i-zap"/></svg></button></div>
+            <ul class="groups">
+              <li class="grp sel"><div class="grp-row"><span class="grp-name">节点选择</span><span class="ms ok">42 ms</span></div><div class="grp-sub"><i class="dot on"></i>香港 IEPL 01</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">自动选择</span><span class="tag">url-test</span><span class="ms ok">39 ms</span></div><div class="grp-sub"><i class="dot on"></i>香港 IEPL 02</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">流媒体</span><span class="ms ok">88 ms</span></div><div class="grp-sub"><i class="dot on"></i>新加坡 02</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">AI 服务</span><span class="ms mid">168 ms</span></div><div class="grp-sub"><i class="dot on"></i>美国 洛杉矶 03</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">电报消息</span><span class="ms ok">42 ms</span></div><div class="grp-sub"><i class="dot on"></i>节点选择 → 香港 IEPL 01</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">微软服务</span><span class="ms none">直连</span></div><div class="grp-sub"><i class="dot"></i>DIRECT</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">苹果服务</span><span class="ms none">直连</span></div><div class="grp-sub"><i class="dot"></i>DIRECT</div></li>
+              <li class="grp"><div class="grp-row"><span class="grp-name">漏网之鱼</span><span class="ms ok">42 ms</span></div><div class="grp-sub"><i class="dot on"></i>节点选择 → 香港 IEPL 01</div></li>
+            </ul>
+          </aside>
+
+          <main class="detail">
+            <div class="det-head">
+              <div class="det-ico"><svg class="ic"><use href="#i-shuffle"/></svg></div>
+              <div class="det-titles">
+                <div class="det-name">节点选择 <span class="tag">select</span></div>
+                <div class="det-sub">当前 <b>香港 IEPL 01</b> · 42 ms · 12 秒前测速 · 42 个节点</div>
+              </div>
+              <div class="det-actions">
+                <button class="btn"><svg class="ic sm"><use href="#i-zap"/></svg>测速</button>
+                <button class="btn"><svg class="ic sm"><use href="#i-refresh"/></svg>刷新</button>
+                <label class="mini-toggle">隐藏超时 <span class="switch sm"></span></label>
+              </div>
+            </div>
+
+            <div class="search">
+              <input id="node-search" type="text" placeholder="搜索节点，例如 香港、IEPL、0.5x" aria-label="搜索节点">
+              <button title="搜索"><svg class="ic sm"><use href="#i-search"/></svg></button>
+            </div>
+
+            <div class="region">
+              <div class="region-head"><span class="rc">HK</span><h4>香港</h4><span class="cnt">12 个节点</span><span class="avg">平均 47 ms</span></div>
+              <div class="chips">
+                <button class="chip sel">香港 IEPL 01<span class="ms">42</span></button>
+                <button class="chip">香港 IEPL 02<span class="ms ok">39</span></button>
+                <button class="chip">香港 IEPL 03<span class="ms ok">45</span></button>
+                <button class="chip">香港 BGP 04<span class="ms ok">51</span></button>
+                <button class="chip">香港 HKT 05 [0.5x]<span class="ms ok">63</span></button>
+                <button class="chip">香港 HKBN 06<span class="ms ok">48</span></button>
+                <button class="chip">香港 家宽 07 [2x]<span class="ms ok">58</span></button>
+                <button class="chip">香港 IPLC 08<span class="ms ok">36</span></button>
+                <button class="chip">香港 CMI 09<span class="ms mid">121</span></button>
+                <button class="chip">香港 10<span class="ms ok">44</span></button>
+                <button class="chip to">香港 11<span class="ms bad none">超时</span></button>
+                <button class="chip">香港 12<span class="ms ok">52</span></button>
+              </div>
+            </div>
+
+            <div class="region">
+              <div class="region-head"><span class="rc">SG</span><h4>新加坡</h4><span class="cnt">8 个节点</span><span class="avg">平均 91 ms</span></div>
+              <div class="chips">
+                <button class="chip">新加坡 01<span class="ms ok">84</span></button>
+                <button class="chip">新加坡 02<span class="ms ok">88</span></button>
+                <button class="chip">新加坡 IEPL 03<span class="ms ok">79</span></button>
+                <button class="chip">新加坡 04 [0.5x]<span class="ms ok">97</span></button>
+                <button class="chip">新加坡 05<span class="ms ok">92</span></button>
+                <button class="chip">新加坡 06<span class="ms mid">134</span></button>
+                <button class="chip">新加坡 07<span class="ms ok">86</span></button>
+                <button class="chip">新加坡 08<span class="ms ok">90</span></button>
+              </div>
+            </div>
+
+            <div class="region">
+              <div class="region-head"><span class="rc">JP</span><h4>日本</h4><span class="cnt">9 个节点</span><span class="avg">平均 102 ms</span></div>
+              <div class="chips">
+                <button class="chip">日本 东京 01<span class="ms ok">96</span></button>
+                <button class="chip">日本 东京 02<span class="ms ok">99</span></button>
+                <button class="chip">日本 东京 IEPL 03<span class="ms ok">72</span></button>
+                <button class="chip">日本 大阪 04<span class="ms mid">118</span></button>
+                <button class="chip">日本 大阪 05<span class="ms mid">125</span></button>
+                <button class="chip">日本 06 [0.5x]<span class="ms ok">104</span></button>
+                <button class="chip">日本 07<span class="ms ok">98</span></button>
+                <button class="chip to">日本 08<span class="ms bad none">超时</span></button>
+                <button class="chip">日本 09<span class="ms ok">101</span></button>
+              </div>
+            </div>
+
+            <div class="region">
+              <div class="region-head"><span class="rc">US</span><h4>美国</h4><span class="cnt">8 个节点</span><span class="avg">平均 176 ms</span></div>
+              <div class="chips">
+                <button class="chip">美国 洛杉矶 01<span class="ms mid">162</span></button>
+                <button class="chip">美国 洛杉矶 02<span class="ms mid">158</span></button>
+                <button class="chip">美国 洛杉矶 03<span class="ms mid">168</span></button>
+                <button class="chip">美国 圣何塞 04<span class="ms mid">171</span></button>
+                <button class="chip">美国 西雅图 05<span class="ms mid">183</span></button>
+                <button class="chip">美国 纽约 06<span class="ms mid">231</span></button>
+                <button class="chip">美国 07 [0.5x]<span class="ms mid">177</span></button>
+                <button class="chip">美国 08<span class="ms bad">312</span></button>
+              </div>
+            </div>
+
+            <div class="region">
+              <div class="region-head"><span class="rc">TW</span><h4>台湾</h4><span class="cnt">5 个节点</span><span class="avg">平均 74 ms</span></div>
+              <div class="chips">
+                <button class="chip">台湾 01<span class="ms ok">68</span></button>
+                <button class="chip">台湾 02<span class="ms ok">71</span></button>
+                <button class="chip">台湾 HiNet 03<span class="ms ok">66</span></button>
+                <button class="chip">台湾 04<span class="ms ok">79</span></button>
+                <button class="chip">台湾 05<span class="ms ok">85</span></button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="notes">
+    <h2>几处有意为之的地方</h2>
+    <ul>
+      <li><b>地区不用国旗 emoji。</b>Windows 没有国旗字体，会显示成两个字母，所以直接用 HK、SG 这种小标签。</li>
+      <li><b>炭黑上的蓝提亮了一档</b>（#7D8FFF）。原来的 #4F6BED 压在炭黑上对比不够，曲线会发闷。</li>
+      <li><b>绿黄红只报延迟</b>：150 ms 以下绿，300 ms 以下黄，再往上红，超时灰字。它们不参与配色。</li>
+      <li><b>阴影只给窗口本身</b>，界面内部全靠白卡片压在米白上分层，没有一处用阴影。</li>
+      <li>订阅名、节点名、流量数都是编的示例。</li>
+    </ul>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  // ---- fit each 1180px window into the available width ----
+  function fit(){
+    document.querySelectorAll('.fit').forEach(function(f){
+      var w = f.querySelector('.win');
+      var s = Math.min(1, f.clientWidth / 1180);
+      w.style.transform = 'scale(' + s + ')';
+      f.style.height = Math.round(780 * s) + 'px';
+    });
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  // ---- traffic chart: last 60 s, download + upload, MB/s ----
+  var svg = document.getElementById('traffic');
+  var W = 1020, H = 150, padR = 58, padT = 8, padB = 20, n = 60, max = 12;
+  var down = [], up = [];
+  for (var i = 0; i < n; i++) {
+    var t = i;
+    down.push(Math.max(0.3, 5 + 3 * Math.sin(t / 6) + 1.5 * Math.sin(t / 2.3 + 1) + 0.8 * Math.sin(t * 1.7)));
+    up.push(Math.max(0.1, 0.8 + 0.5 * Math.sin(t / 4 + 2) + 0.3 * Math.sin(t * 1.3)));
+  }
+  var x = function(i){ return (i * (W - padR) / (n - 1)).toFixed(1); };
+  var y = function(v){ return (padT + (H - padT - padB) * (1 - v / max)).toFixed(1); };
+  var line = function(arr){ return arr.map(function(v, i){ return (i ? 'L' : 'M') + x(i) + ' ' + y(v); }).join(' '); };
+  var ns = 'http://www.w3.org/2000/svg';
+  var el = function(tag, attrs, text){
+    var e = document.createElementNS(ns, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  var defs = el('defs');
+  var g = el('linearGradient', { id: 'gfill', x1: 0, y1: 0, x2: 0, y2: 1 });
+  g.appendChild(el('stop', { offset: '0', 'stop-color': '#7D8FFF', 'stop-opacity': '.38' }));
+  g.appendChild(el('stop', { offset: '1', 'stop-color': '#7D8FFF', 'stop-opacity': '0' }));
+  defs.appendChild(g); svg.appendChild(defs);
+  [0, 4, 8, 12].forEach(function(v){
+    svg.appendChild(el('line', { x1: 0, x2: W - padR, y1: y(v), y2: y(v), stroke: 'rgba(255,255,255,.09)', 'stroke-width': 1 }));
+    svg.appendChild(el('text', { x: W - padR + 10, y: (+y(v) + 4).toFixed(1) }, v + ' MB/s'));
+  });
+  svg.appendChild(el('path', { d: line(down) + ' L' + x(n - 1) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + ' Z', fill: 'url(#gfill)' }));
+  svg.appendChild(el('path', { d: line(down), fill: 'none', stroke: '#7D8FFF', 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+  svg.appendChild(el('path', { d: line(up), fill: 'none', stroke: 'rgba(255,255,255,.5)', 'stroke-width': 1.5, 'stroke-linejoin': 'round' }));
+  svg.appendChild(el('circle', { cx: x(n - 1), cy: y(down[n - 1]), r: 4, fill: '#7D8FFF', stroke: '#1F2024', 'stroke-width': 2 }));
+  svg.appendChild(el('text', { x: 0, y: H - 4 }, '60 秒前'));
+  svg.appendChild(el('text', { x: W - padR, y: H - 4, 'text-anchor': 'end' }, '现在'));
+  document.getElementById('down-now').textContent = down[n - 1].toFixed(1);
+  document.getElementById('up-now').textContent = up[n - 1].toFixed(1);
+})();
+</script>

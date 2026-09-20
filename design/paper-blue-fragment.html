@@ -1,0 +1,543 @@
+<div id="paper-blue" aria-label="Zephyr 蓝白纸面风界面设计稿">
+  <style>
+    #paper-blue {
+      --paper-blue: #3157f4;
+      --paper-blue-dark: #2341bf;
+      --paper-blue-pale: #e9edff;
+      --paper-paper: #fbfbf8;
+      --paper-ground: #e9e8e2;
+      --paper-ink: #151922;
+      --paper-muted: #676e7b;
+      --paper-line: #dfe1e6;
+      --paper-line-dark: #b6bdce;
+      --paper-green: #16854d;
+      --paper-orange: #d97828;
+      --paper-radius: 9px;
+      --paper-font: "Segoe UI Variable Text", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+      width: 100%;
+      color: var(--paper-ink);
+      font-family: var(--paper-font);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #paper-blue *, #paper-blue *::before, #paper-blue *::after { box-sizing: border-box; }
+    #paper-blue button, #paper-blue input { font: inherit; }
+    #paper-blue h1, #paper-blue h2, #paper-blue h3, #paper-blue p { margin: 0; }
+    #paper-blue [hidden] { display: none !important; }
+    #paper-blue button { cursor: pointer; }
+    #paper-blue button:focus-visible, #paper-blue input:focus-visible { outline: 2px solid var(--paper-blue); outline-offset: 3px; }
+    #paper-blue .paper-window {
+      position: relative;
+      display: grid;
+      grid-template-columns: 186px minmax(0, 1fr);
+      width: min(1180px, 100%);
+      min-height: 720px;
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid #d7dce8;
+      border-radius: calc(var(--paper-radius) + 5px);
+      background: var(--paper-paper);
+      box-shadow: none;
+    }
+    #paper-blue .paper-nav {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      padding: 27px 16px 23px;
+      color: #fff;
+      background: var(--paper-blue);
+    }
+    #paper-blue .paper-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 0 7px;
+      letter-spacing: -.045em;
+      font-size: 24px;
+      font-weight: 600;
+    }
+    #paper-blue .paper-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      color: var(--paper-blue);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -.06em;
+      flex: none;
+      border-radius: 6px;
+    }
+    #paper-blue .paper-nav-rule { height: 1px; margin: 26px 7px 22px; background: rgba(255,255,255,.35); }
+    #paper-blue .paper-nav-label { margin: 0 7px 11px; color: rgba(255,255,255,.65); font-size: 10px; letter-spacing: .18em; }
+    #paper-blue .paper-nav-list { display: grid; gap: 8px; }
+    #paper-blue .paper-nav-btn {
+      display: grid;
+      grid-template-columns: 18px minmax(0,1fr) 18px;
+      min-height: 45px;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+      border: 0;
+      color: rgba(255,255,255,.82);
+      background: transparent;
+      text-align: left;
+      border-radius: 6px;
+    }
+    #paper-blue .paper-nav-btn:hover { color: #fff; background: rgba(255,255,255,.12); }
+    #paper-blue .paper-nav-btn.is-active { color: var(--paper-ink); background: #fff; }
+    #paper-blue .paper-nav-num { display: none; font-family: ui-monospace, Consolas, monospace; font-size: 11px; opacity: .7; }
+    #paper-blue .paper-nav-btn.is-active .paper-nav-num { color: var(--paper-blue); opacity: 1; }
+    #paper-blue .paper-nav-icon { display: grid; place-items: center; width: 18px; }
+    #paper-blue .paper-nav-icon svg { width: 16px; height: 16px; stroke-width: 1.6; }
+    #paper-blue .paper-nav-arrow { font-size: 17px; opacity: .7; }
+    #paper-blue .paper-nav-bottom { margin-top: auto; display: grid; gap: 18px; padding: 23px 7px 0; }
+    #paper-blue .paper-nav-foot { display: flex; justify-content: space-between; color: rgba(255,255,255,.65); font-size: 11px; }
+    #paper-blue .paper-nav-foot strong { color: #fff; font-weight: 500; }
+    #paper-blue .paper-nav-stamp { padding-top: 17px; border-top: 1px solid rgba(255,255,255,.35); color: rgba(255,255,255,.78); font-size: 11px; letter-spacing: .04em; line-height: 1.9; }
+
+    #paper-blue .paper-workspace { display: grid; min-width: 0; grid-template-rows: 54px minmax(0, 1fr); background: var(--paper-paper); }
+    #paper-blue .paper-topbar { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 16px; padding: 0 26px; border-bottom: 1px solid var(--paper-line); }
+    #paper-blue .paper-top-meta { display: flex; min-width: 0; align-items: center; gap: 12px; color: var(--paper-muted); font-size: 11px; letter-spacing: .04em; }
+    #paper-blue .paper-live { display: inline-flex; align-items: center; gap: 6px; color: var(--paper-green); font-weight: 600; }
+    #paper-blue .paper-live-dot { width: 6px; height: 6px; background: var(--paper-green); }
+    #paper-blue .paper-top-actions { display: flex; align-items: center; gap: 1px; }
+    #paper-blue .paper-window-btn { display: grid; width: 30px; height: 28px; place-items: center; border: 0; color: var(--paper-muted); background: transparent; }
+    #paper-blue .paper-window-btn:hover { color: var(--paper-ink); background: var(--paper-blue-pale); }
+    #paper-blue .paper-window-btn svg { width: 14px; height: 14px; }
+    #paper-blue .paper-window-btn.close:hover { color: #fff; background: #d73b49; }
+
+    #paper-blue .paper-page {
+      position: relative;
+      min-width: 0;
+      padding: 32px 32px 26px;
+      overflow: visible;
+      background-color: var(--paper-paper);
+      background-image: none;
+    }
+    #paper-blue .paper-page::after { position: absolute; top: 23px; right: 26px; width: 8px; height: 8px; border-top: 1px solid var(--paper-blue); border-right: 1px solid var(--paper-blue); content: ""; }
+    #paper-blue .paper-page-header { display: flex; min-width: 0; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 30px; }
+    #paper-blue .paper-kicker { display: flex; align-items: center; gap: 10px; color: var(--paper-blue); font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+    #paper-blue .paper-kicker-line { width: 35px; height: 2px; background: currentColor; }
+    #paper-blue .paper-heading { margin-top: 10px; letter-spacing: -.04em; font-size: 32px; font-weight: 500; line-height: 1.3; }
+    #paper-blue .paper-subheading { max-width: 420px; margin-top: 9px; color: var(--paper-muted); font-size: 13px; }
+    #paper-blue .paper-date { align-self: start; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 11px; line-height: 1.8; text-align: right; white-space: nowrap; }
+    #paper-blue .paper-date strong { display: block; color: var(--paper-ink); font-size: 14px; font-weight: 500; }
+
+    #paper-blue .paper-overview-grid { display: grid; grid-template-columns: minmax(0, 1.42fr) minmax(220px, .72fr); gap: 17px; }
+    #paper-blue .paper-hero { min-width: 0; min-height: 270px; padding: 24px 25px 16px; border-radius: var(--paper-radius); color: #fff; background: var(--paper-blue); }
+    #paper-blue .paper-hero-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    #paper-blue .paper-hero-label { font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .16em; opacity: .72; }
+    #paper-blue .paper-hero-index { font-family: ui-monospace, Consolas, monospace; font-size: 11px; opacity: .72; }
+    #paper-blue .paper-hero h2 { margin: 18px 0 27px; letter-spacing: -.03em; font-size: 27px; font-weight: 500; line-height: 1.1; }
+    #paper-blue .paper-hero-bottom { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 20px; }
+    #paper-blue .paper-hero-stat { display: grid; gap: 2px; }
+    #paper-blue .paper-hero-stat-label { color: rgba(255,255,255,.68); font-size: 11px; }
+    #paper-blue .paper-hero-stat-value { letter-spacing: -.05em; font-family: "Segoe UI", sans-serif; font-size: 36px; font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #paper-blue .paper-unit { margin-left: 4px; letter-spacing: 0; font-size: 11px; font-weight: 400; opacity: .72; }
+    #paper-blue .paper-chart { width: 100%; height: 68px; margin-top: 7px; overflow: visible; }
+    #paper-blue .paper-chart-grid { stroke: rgba(255,255,255,.2); stroke-width: 1; }
+    #paper-blue .paper-chart-line { fill: none; stroke: #fff; stroke-width: 2.3; stroke-linejoin: round; stroke-linecap: round; }
+    #paper-blue .paper-chart-fill { fill: rgba(255,255,255,.16); }
+    #paper-blue .paper-chart-label { fill: rgba(255,255,255,.6); font-family: ui-monospace, Consolas, monospace; font-size: 9px; }
+    #paper-blue .paper-note { display: grid; min-width: 0; min-height: 259px; align-content: space-between; padding: 22px 22px 19px; border: 1px solid var(--paper-line); border-radius: var(--paper-radius); background: #fff; box-shadow: 0 3px 0 #eeefed; }
+    #paper-blue .paper-note-top { display: flex; align-items: center; justify-content: space-between; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .1em; }
+    #paper-blue .paper-note-mark { width: 24px; height: 24px; border: 1px solid var(--paper-blue); color: var(--paper-blue); font-size: 12px; text-align: center; line-height: 22px; }
+    #paper-blue .paper-note-number { margin-top: 18px; color: var(--paper-blue); letter-spacing: -.075em; font-family: "Segoe UI",sans-serif; font-size: 76px; font-weight: 300; line-height: .95; }
+    #paper-blue .paper-note-title { margin-top: 7px; font-size: 15px; font-weight: 600; }
+    #paper-blue .paper-note-copy { margin-top: 3px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-note-foot { display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--paper-line); color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+
+    #paper-blue .paper-rule { height: 1px; margin: 27px 0 19px; background: var(--paper-line-dark); }
+    #paper-blue .paper-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; margin-bottom: 12px; }
+    #paper-blue .paper-section-head h3 { font-size: 16px; font-weight: 600; }
+    #paper-blue .paper-section-label { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .1em; }
+    #paper-blue .paper-route-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(235px, .82fr); gap: 17px; }
+    #paper-blue .paper-route { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 12px; min-width: 0; min-height: 104px; padding: 16px; border: 1px solid var(--paper-line); border-radius: var(--paper-radius); background: #fff; }
+    #paper-blue .paper-route-icon { display: grid; width: 42px; height: 42px; border-radius: 8px; place-items: center; color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-route-icon svg { width: 20px; height: 20px; }
+    #paper-blue .paper-route-label { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .09em; }
+    #paper-blue .paper-route-name { margin-top: 3px; font-size: 16px; font-weight: 600; }
+    #paper-blue .paper-route-sub { margin-top: 3px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-route-ms { align-self: start; color: var(--paper-green); font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    #paper-blue .paper-toggle-line { display: flex; min-height: 104px; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-top: 1px solid var(--paper-line-dark); border-bottom: 1px solid var(--paper-line-dark); background: transparent; }
+    #paper-blue .paper-toggle-copy { display: grid; gap: 3px; }
+    #paper-blue .paper-toggle-title { font-size: 14px; font-weight: 600; }
+    #paper-blue .paper-toggle-sub { color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-switch { position: relative; flex: 0 0 auto; width: 43px; height: 24px; border: 0; border-radius: 20px; background: var(--paper-line-dark); }
+    #paper-blue .paper-switch::after { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; content: ""; transition: transform 160ms ease; }
+    #paper-blue .paper-switch.is-on { background: var(--paper-blue); }
+    #paper-blue .paper-switch.is-on::after { transform: translateX(19px); }
+    #paper-blue .paper-bottomline { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 23px; color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-bottomline strong { color: var(--paper-ink); font-weight: 500; }
+
+    #paper-blue .paper-proxy-layout { display: grid; grid-template-columns: 157px minmax(0, 1fr); gap: 22px; }
+    #paper-blue .paper-group-list { border-top: 1px solid var(--paper-ink); }
+    #paper-blue .paper-group { display: grid; width: 100%; grid-template-columns: minmax(0,1fr) auto; gap: 3px 10px; min-height: 62px; align-content: center; padding: 10px; border: 0; border-bottom: 1px solid var(--paper-line); border-left: 3px solid transparent; background: transparent; text-align: left; }
+    #paper-blue .paper-group:hover { background: var(--paper-blue-pale); }
+    #paper-blue .paper-group.is-active { border-left-color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-group-name { font-size: 13px; font-weight: 600; }
+    #paper-blue .paper-group-count { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-group-node { grid-column: 1 / -1; overflow: hidden; color: var(--paper-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    #paper-blue .paper-group-node::before { display: inline-block; width: 5px; height: 5px; margin: 0 6px 2px 0; background: var(--paper-green); content: ""; }
+    #paper-blue .paper-proxy-main { min-width: 0; }
+    #paper-blue .paper-proxy-head { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 18px; padding-bottom: 17px; border-bottom: 1px solid var(--paper-line-dark); }
+    #paper-blue .paper-proxy-title { display: flex; align-items: baseline; gap: 10px; }
+    #paper-blue .paper-proxy-title h2 { letter-spacing: -.04em; font-size: 25px; font-weight: 500; }
+    #paper-blue .paper-proxy-title span { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 11px; }
+    #paper-blue .paper-proxy-sub { margin-top: 5px; color: var(--paper-muted); font-size: 12px; }
+    #paper-blue .paper-proxy-actions { display: flex; align-items: center; gap: 7px; }
+    #paper-blue .paper-action { display: inline-flex; min-height: 32px; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--paper-line); border-radius: 5px; color: var(--paper-ink); background: #fff; font-size: 12px; }
+    #paper-blue .paper-action:hover { color: #fff; border-color: var(--paper-blue); background: var(--paper-blue); }
+    #paper-blue .paper-action svg { width: 14px; height: 14px; }
+    #paper-blue .paper-search-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 0 19px; }
+    #paper-blue .paper-search { display: flex; min-width: 180px; flex: 1; align-items: center; gap: 8px; padding: 0 11px; border-bottom: 1px solid var(--paper-line-dark); background: #fff; }
+    #paper-blue .paper-search svg { width: 15px; height: 15px; color: var(--paper-muted); }
+    #paper-blue .paper-search input { min-width: 0; width: 100%; height: 34px; border: 0; color: var(--paper-ink); background: transparent; font-size: 12px; }
+    #paper-blue .paper-search input::placeholder { color: var(--paper-muted); }
+    #paper-blue .paper-order { color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; white-space: nowrap; }
+    #paper-blue .paper-region { margin-bottom: 22px; }
+    #paper-blue .paper-region-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
+    #paper-blue .paper-region-code { color: var(--paper-blue); font-family: ui-monospace, Consolas, monospace; font-size: 11px; font-weight: 700; }
+    #paper-blue .paper-region-name { font-size: 13px; font-weight: 600; }
+    #paper-blue .paper-region-count { color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-region-avg { margin-left: auto; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 7px; }
+    #paper-blue .paper-node { display: grid; min-width: 0; min-height: 66px; align-content: center; gap: 6px; padding: 10px 12px; border: 1px solid var(--paper-line); border-radius: 5px; color: var(--paper-ink); background: #fff; text-align: left; transition: background 140ms,border-color 140ms; }
+    #paper-blue .paper-node:hover { border-color: var(--paper-blue); background: var(--paper-blue-pale); }
+    #paper-blue .paper-node.is-selected { color: #fff; border-color: var(--paper-blue); background: var(--paper-blue); }
+    #paper-blue .paper-node-name { overflow: hidden; font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    #paper-blue .paper-node-meta { display: flex; justify-content: space-between; gap: 6px; color: var(--paper-muted); font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+    #paper-blue .paper-node.is-selected .paper-node-meta { color: rgba(255,255,255,.72); }
+    #paper-blue .paper-node-meta strong { color: var(--paper-green); font-weight: 500; }
+    #paper-blue .paper-node.is-selected .paper-node-meta strong { color: #fff; }
+    #paper-blue .paper-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 26px; padding-top: 13px; border-top: 1px solid var(--paper-line-dark); color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-mode { display: flex; gap: 4px; margin-top: 13px; }
+    #paper-blue .paper-mode button { padding: 6px 14px; border: 1px solid transparent; border-radius: 5px; color: var(--paper-muted); background: transparent; font-size: 12px; }
+    #paper-blue .paper-mode button[aria-pressed="true"] { color: var(--paper-blue); border-color: #d5dcfb; background: #fff; }
+    #paper-blue .paper-overview-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 17px; }
+    #paper-blue .paper-tun { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding-left: 24px; border-left: 1px solid var(--paper-line); }
+    #paper-blue .paper-notice { min-height: 18px; margin-top: 12px; color: var(--paper-muted); font-size: 11px; }
+    #paper-blue .paper-empty { padding: 25px 0; color: var(--paper-muted); font-size: 13px; }
+    #paper-blue.paper-is-compact .paper-page { padding: 24px; }
+    #paper-blue.paper-is-compact .paper-node { min-height: 54px; }
+
+    #paper-blue .paper-screen[hidden] { display: none; }
+    @media (max-width: 850px) {
+      #paper-blue .paper-window { grid-template-columns: 72px minmax(0, 1fr); }
+      #paper-blue .paper-nav { padding: 22px 12px; }
+      #paper-blue .paper-brand { justify-content: center; padding: 0; }
+      #paper-blue .paper-brand-text, #paper-blue .paper-nav-label, #paper-blue .paper-nav-btn > :not(.paper-nav-icon):not(.paper-nav-num), #paper-blue .paper-nav-foot, #paper-blue .paper-nav-stamp { display: none; }
+      #paper-blue .paper-nav-rule { margin: 24px 0 20px; }
+      #paper-blue .paper-nav-btn { grid-template-columns: 1fr; justify-items: center; padding: 0; }
+      #paper-blue .paper-nav-num { display: none; }
+      #paper-blue .paper-nav-icon svg { width: 18px; height: 18px; }
+      #paper-blue .paper-page { padding: 31px 24px; }
+      #paper-blue .paper-overview-grid { grid-template-columns: minmax(0,1.4fr) minmax(188px,.7fr); }
+      #paper-blue .paper-route-grid { grid-template-columns: 1fr; }
+      #paper-blue .paper-date { display: none; }
+    }
+    @media (max-width: 620px) {
+      #paper-blue .paper-window { display: block; min-height: 0; }
+      #paper-blue .paper-nav { display: block; padding: 12px; }
+      #paper-blue .paper-brand { justify-content: flex-start; }
+      #paper-blue .paper-brand-text { display: inline; }
+      #paper-blue .paper-nav-rule, #paper-blue .paper-nav-label, #paper-blue .paper-nav-bottom { display: none; }
+      #paper-blue .paper-nav-list { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+      #paper-blue .paper-nav-btn { grid-template-columns: 21px 1fr auto; min-height: 36px; justify-items: start; padding: 0 9px; }
+      #paper-blue .paper-nav-btn > :not(.paper-nav-icon):not(.paper-nav-num) { display: block; }
+      #paper-blue .paper-nav-num { display: none; }
+      #paper-blue .paper-workspace { display: block; }
+      #paper-blue .paper-topbar { height: 45px; padding: 0 14px; }
+      #paper-blue .paper-date { display: none; }
+      #paper-blue .paper-page { padding: 27px 17px; }
+      #paper-blue .paper-page-header { align-items: start; margin-bottom: 24px; }
+      #paper-blue .paper-heading { font-size: 29px; }
+      #paper-blue .paper-overview-grid { grid-template-columns: 1fr; }
+      #paper-blue .paper-note { min-height: 225px; }
+      #paper-blue .paper-overview-controls { grid-template-columns: 1fr; }
+      #paper-blue .paper-tun { border-left: 0; padding: 12px 0 0; border-top: 1px solid var(--paper-line); }
+      #paper-blue .paper-search { min-width: 0; }
+      #paper-blue .paper-subscription-details { grid-template-columns: 1fr !important; }
+      #paper-blue .paper-subscription-details > div:last-child { padding: 16px 0 0 !important; border-left: 0 !important; border-top: 1px solid var(--paper-line); }
+      #paper-blue .paper-node-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      #paper-blue .paper-node { padding: 10px 8px; }
+      #paper-blue .paper-note-foot { flex-wrap: wrap; gap: 8px; }
+      #paper-blue .paper-proxy-layout { grid-template-columns: 1fr; gap: 20px; }
+      #paper-blue .paper-group-list { display: grid; grid-template-columns: repeat(2, 1fr); }
+      #paper-blue .paper-group { min-height: 49px; }
+      #paper-blue .paper-proxy-head { display: block; }
+      #paper-blue .paper-proxy-actions { margin-top: 14px; }
+    }
+    @media (pointer: coarse) { #paper-blue button, #paper-blue input { min-height: 44px; } #paper-blue input { font-size: 16px; } #paper-blue .paper-switch { min-height: 24px; } #paper-blue .paper-switch::before { position: absolute; content: ""; inset: -10px 0; } }
+    @media (prefers-reduced-motion: reduce) { #paper-blue * { transition: none !important; } }
+  </style>
+
+  <div class="paper-window">
+    <nav class="paper-nav" aria-label="Zephyr 主导航">
+      <div class="paper-brand"><span class="paper-mark">Z</span><span class="paper-brand-text">zephyr.</span></div>
+      <div class="paper-nav-rule"></div>
+      <div class="paper-nav-label">你的网络空间</div>
+      <div class="paper-nav-list" role="tablist" aria-label="工作区">
+        <button id="paper-overview-tab" class="paper-nav-btn is-active" type="button" role="tab" aria-label="总览" aria-selected="true" aria-controls="paper-overview" data-screen="overview">
+          <span class="paper-nav-num">01</span><span class="paper-nav-icon"><i data-lucide="layout-dashboard" aria-hidden="true"></i></span><span>总览</span><span class="paper-nav-arrow">↗</span>
+        </button>
+        <button id="paper-proxies-tab" class="paper-nav-btn" type="button" role="tab" aria-label="节点" aria-selected="false" aria-controls="paper-proxies" data-screen="proxies">
+          <span class="paper-nav-num">02</span><span class="paper-nav-icon"><i data-lucide="globe-2" aria-hidden="true"></i></span><span>节点</span><span class="paper-nav-arrow">↗</span>
+        </button>
+        <button id="paper-subscriptions-tab" class="paper-nav-btn" type="button" role="tab" aria-label="订阅" aria-selected="false" aria-controls="paper-subscriptions" data-screen="subscriptions">
+          <span class="paper-nav-num">03</span><span class="paper-nav-icon"><i data-lucide="layers-3" aria-hidden="true"></i></span><span>订阅</span><span class="paper-nav-arrow">↗</span>
+        </button>
+        <button id="paper-settings-tab" class="paper-nav-btn" type="button" role="tab" aria-label="设置" aria-selected="false" aria-controls="paper-settings" data-screen="settings">
+          <span class="paper-nav-num">04</span><span class="paper-nav-icon"><i data-lucide="sliders-horizontal" aria-hidden="true"></i></span><span>设置</span><span class="paper-nav-arrow">↗</span>
+        </button>
+      </div>
+      <div class="paper-nav-bottom">
+        <div class="paper-nav-foot"><span>内核</span><strong>mihomo</strong></div>
+        <div class="paper-nav-foot"><span>版本</span><strong>v1.19.31</strong></div>
+        <div class="paper-nav-stamp">ZEPHYR FOR WINDOWS<br>轻盈，有序，始终在线。</div>
+      </div>
+    </nav>
+
+    <div class="paper-workspace">
+      <header class="paper-topbar">
+        <div class="paper-top-meta"><span class="paper-live"><i class="paper-live-dot"></i> ZEPHYR</span><span>设计预览 · 示例数据</span></div>
+        <div class="paper-top-actions" aria-hidden="true">
+          <span class="paper-window-btn"><i data-lucide="minus"></i></span>
+          <span class="paper-window-btn"><i data-lucide="square"></i></span>
+          <span class="paper-window-btn"><i data-lucide="x"></i></span>
+        </div>
+      </header>
+
+      <main class="paper-page">
+        <section class="paper-screen" id="paper-overview" role="tabpanel" aria-labelledby="paper-overview-tab">
+          <div class="paper-page-header">
+            <div><div class="paper-kicker"><span class="paper-kicker-line"></span>01 / OVERVIEW</div><h1 class="paper-heading">连接总览</h1><p class="paper-subheading">当前订阅 Nya Cloud · 运行状态正常</p></div>
+            <div class="paper-date"><strong>03:12:44</strong>本次运行时长</div>
+          </div>
+
+          <div class="paper-overview-grid">
+            <section class="paper-hero" aria-label="实时流量">
+              <div class="paper-hero-top"><span class="paper-hero-label">NETWORK / LIVE</span><span class="paper-hero-index">最近 60 秒</span></div>
+              <h2 id="paper-connection-title">网络已连接<span style="font-size:14px;margin-left:10px;opacity:.75">↗</span></h2>
+              <div class="paper-hero-bottom">
+                <div class="paper-hero-stat"><span class="paper-hero-stat-label">↓ 下载速率</span><span class="paper-hero-stat-value">12.8<span class="paper-unit">MB/s</span></span></div>
+                <div class="paper-hero-stat"><span class="paper-hero-stat-label">↑ 上传速率</span><span class="paper-hero-stat-value">1.4<span class="paper-unit">MB/s</span></span></div>
+              </div>
+              <svg class="paper-chart" viewBox="0 0 600 78" role="img" aria-label="最近 60 秒流量折线图">
+                <line class="paper-chart-grid" x1="0" x2="600" y1="18" y2="18"></line><line class="paper-chart-grid" x1="0" x2="600" y1="42" y2="42"></line><line class="paper-chart-grid" x1="0" x2="600" y1="66" y2="66"></line>
+                <path class="paper-chart-fill" d="M0 57 L20 45 L40 51 L60 34 L80 44 L100 32 L120 38 L140 29 L160 39 L180 26 L200 33 L220 31 L240 45 L260 41 L280 54 L300 48 L320 58 L340 39 L360 47 L380 30 L400 37 L420 24 L440 32 L460 18 L480 25 L500 20 L520 31 L540 21 L560 34 L580 27 L600 29 L600 78 L0 78 Z"></path>
+                <path class="paper-chart-line" d="M0 57 L20 45 L40 51 L60 34 L80 44 L100 32 L120 38 L140 29 L160 39 L180 26 L200 33 L220 31 L240 45 L260 41 L280 54 L300 48 L320 58 L340 39 L360 47 L380 30 L400 37 L420 24 L440 32 L460 18 L480 25 L500 20 L520 31 L540 21 L560 34 L580 27 L600 29"></path>
+              </svg>
+            </section>
+            <aside class="paper-note" aria-label="运行摘要">
+              <div><div class="paper-note-top"><span>ACTIVITY / 01</span><span class="paper-note-mark">↗</span></div><div class="paper-note-number">47</div><div class="paper-note-title">个活动连接</div><div class="paper-note-copy">今日累计下载 4.2 GB<br>今日累计上传 312 MB</div></div>
+              <div class="paper-note-foot"><span>内存 86 MB</span><span>内核运行中</span></div>
+            </aside>
+          </div>
+
+          <div class="paper-rule"></div>
+          <div class="paper-section-head"><h3>当前出站路径</h3><span class="paper-section-label">ROUTE / PRIMARY</span></div>
+          <div class="paper-route-grid">
+            <div class="paper-route"><div class="paper-route-icon"><i data-lucide="route" aria-hidden="true"></i></div><div><div class="paper-route-label">当前节点</div><div class="paper-route-name" id="paper-current-route">香港 IEPL 01</div><div class="paper-route-sub">Nya Cloud · <button type="button" data-open-nodes style="padding:0;border:0;background:none;color:var(--paper-blue);font:inherit">切换节点 ↗</button></div></div><div class="paper-route-ms" id="paper-current-ms">42 ms</div></div>
+            <div class="paper-toggle-line"><div class="paper-toggle-copy"><span class="paper-toggle-title">系统代理</span><span class="paper-toggle-sub" id="paper-proxy-status">127.0.0.1:7897 · 已接管</span></div><button class="paper-switch is-on" type="button" role="switch" aria-checked="true" aria-label="切换系统代理" id="paper-proxy-switch"></button></div>
+          </div>
+          <div class="paper-overview-controls"><div><span class="paper-toggle-title">出站模式</span><div class="paper-mode" aria-label="出站模式"><button type="button" aria-pressed="true">规则</button><button type="button" aria-pressed="false">全局</button><button type="button" aria-pressed="false">直连</button></div></div><div class="paper-tun"><div class="paper-toggle-copy"><span class="paper-toggle-title">TUN 增强模式</span><span class="paper-toggle-sub">接管设备的全部网络流量</span></div><button class="paper-switch" type="button" role="switch" aria-label="TUN 增强模式" aria-checked="false"></button></div></div>
+          <div class="paper-bottomline"><span>配置 <strong>Nya Cloud</strong></span><span id="paper-mode-summary">规则分流 · 本地端口 7897</span><span>2 小时前更新</span></div>
+        </section>
+
+        <section class="paper-screen" id="paper-proxies" role="tabpanel" aria-labelledby="paper-proxies-tab" hidden>
+          <div class="paper-page-header"><div><div class="paper-kicker"><span class="paper-kicker-line"></span>02 / ROUTING</div><h1 class="paper-heading">代理节点</h1><p class="paper-subheading">13 个节点 · 3 个地区 · Nya Cloud</p></div><div class="paper-date"><strong>13 / 13</strong>节点可用</div></div>
+          <div class="paper-proxy-layout">
+            <aside class="paper-group-list" aria-label="策略组">
+              <button class="paper-group is-active" type="button" data-group="节点选择"><span class="paper-group-name">节点选择</span><span class="paper-group-count">12</span><span class="paper-group-node">香港 IEPL 01 · 42 ms</span></button>
+              <button class="paper-group" type="button" data-group="自动选择"><span class="paper-group-name">自动选择</span><span class="paper-group-count">12</span><span class="paper-group-node">香港 IEPL 02 · 39 ms</span></button>
+              <button class="paper-group" type="button" data-group="流媒体"><span class="paper-group-name">流媒体</span><span class="paper-group-count">8</span><span class="paper-group-node">新加坡 02 · 88 ms</span></button>
+              <button class="paper-group" type="button" data-group="AI 服务"><span class="paper-group-name">AI 服务</span><span class="paper-group-count">8</span><span class="paper-group-node">美国 洛杉矶 03 · 168 ms</span></button>
+              <button class="paper-group" type="button" data-group="电报消息"><span class="paper-group-name">电报消息</span><span class="paper-group-count">1</span><span class="paper-group-node">跟随节点选择</span></button>
+              <button class="paper-group" type="button" data-group="微软服务"><span class="paper-group-name">微软服务</span><span class="paper-group-count">1</span><span class="paper-group-node">DIRECT · 直连</span></button>
+            </aside>
+            <section class="paper-proxy-main">
+              <div class="paper-proxy-head"><div><div class="paper-proxy-title"><h2 id="paper-group-title">节点选择</h2><span>SELECT</span></div><div class="paper-proxy-sub">当前 <strong id="paper-proxy-current">香港 IEPL 01</strong></div></div><div class="paper-proxy-actions"><button class="paper-action" id="paper-test" type="button"><i data-lucide="zap" aria-hidden="true"></i><span>测速</span></button><button class="paper-action" id="paper-refresh" type="button"><i data-lucide="refresh-cw" aria-hidden="true"></i>刷新</button></div></div>
+              <div class="paper-search-row"><label class="paper-search"><i data-lucide="search" aria-hidden="true"></i><input id="paper-node-search" type="search" placeholder="搜索节点、地区或线路" aria-label="搜索节点"></label><span class="paper-order" id="paper-search-count">13 个节点</span></div>
+              <p class="paper-empty" id="paper-empty" hidden>没有匹配的节点，试试其他地区或线路名称。</p>
+              <div class="paper-region"><div class="paper-region-head"><span class="paper-region-code">HK</span><span class="paper-region-name">香港</span><span class="paper-region-count">12 nodes</span><span class="paper-region-avg">AVG 47 MS</span></div><div class="paper-node-grid">
+                <button class="paper-node is-selected" type="button" data-node="香港 IEPL 01"><span class="paper-node-name">香港 IEPL 01</span><span class="paper-node-meta"><span>IEPL · 1.0x</span><strong>42 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="香港 IEPL 02"><span class="paper-node-name">香港 IEPL 02</span><span class="paper-node-meta"><span>IEPL · 1.0x</span><strong>39 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="香港 BGP 04"><span class="paper-node-name">香港 BGP 04</span><span class="paper-node-meta"><span>BGP · 1.0x</span><strong>51 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="香港 HKT 05"><span class="paper-node-name">香港 HKT 05</span><span class="paper-node-meta"><span>HKT · 0.5x</span><strong>63 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="香港 CMI 09"><span class="paper-node-name">香港 CMI 09</span><span class="paper-node-meta"><span>CMI · 1.0x</span><strong>121 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="香港 IPLC 08"><span class="paper-node-name">香港 IPLC 08</span><span class="paper-node-meta"><span>IPLC · 1.0x</span><strong>36 ms</strong></span></button>
+              </div></div>
+              <div class="paper-region"><div class="paper-region-head"><span class="paper-region-code">SG</span><span class="paper-region-name">新加坡</span><span class="paper-region-count">8 nodes</span><span class="paper-region-avg">AVG 91 MS</span></div><div class="paper-node-grid">
+                <button class="paper-node" type="button" data-node="新加坡 01"><span class="paper-node-name">新加坡 01</span><span class="paper-node-meta"><span>Premium · 1.0x</span><strong>84 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="新加坡 02"><span class="paper-node-name">新加坡 02</span><span class="paper-node-meta"><span>Premium · 1.0x</span><strong>88 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="新加坡 IEPL 03"><span class="paper-node-name">新加坡 IEPL 03</span><span class="paper-node-meta"><span>IEPL · 1.0x</span><strong>79 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="新加坡 06"><span class="paper-node-name">新加坡 06</span><span class="paper-node-meta"><span>BGP · 1.0x</span><strong>134 ms</strong></span></button>
+              </div></div>
+              <div class="paper-region"><div class="paper-region-head"><span class="paper-region-code">JP</span><span class="paper-region-name">日本</span><span class="paper-region-count">9 nodes</span><span class="paper-region-avg">AVG 102 MS</span></div><div class="paper-node-grid">
+                <button class="paper-node" type="button" data-node="日本 东京 IEPL 03"><span class="paper-node-name">日本 东京 IEPL 03</span><span class="paper-node-meta"><span>IEPL · 1.0x</span><strong>72 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="日本 大阪 04"><span class="paper-node-name">日本 大阪 04</span><span class="paper-node-meta"><span>BGP · 1.0x</span><strong>118 ms</strong></span></button>
+                <button class="paper-node" type="button" data-node="日本 东京 09"><span class="paper-node-name">日本 东京 09</span><span class="paper-node-meta"><span>Premium · 1.0x</span><strong>101 ms</strong></span></button>
+              </div></div>
+              <div class="paper-footer"><span>已选 <strong id="paper-footer-node">香港 IEPL 01</strong></span><span>13 个节点 · 3 个地区</span></div>
+              <p class="paper-notice" id="paper-node-notice" aria-live="polite">延迟为演示数据</p>
+            </section>
+          </div>
+        </section>
+
+        <section class="paper-screen" id="paper-subscriptions" role="tabpanel" aria-labelledby="paper-subscriptions-tab" hidden>
+          <div class="paper-page-header"><div><div class="paper-kicker"><span class="paper-kicker-line"></span>03 / SUBSCRIPTIONS</div><h1 class="paper-heading">订阅管理</h1><p class="paper-subheading">管理配置来源，查看流量余额与更新记录。</p></div><div class="paper-date"><strong>01</strong>正在使用的订阅</div></div>
+          <div class="paper-route-grid"><div class="paper-route"><div class="paper-route-icon"><i data-lucide="cloud" aria-hidden="true"></i></div><div><div class="paper-route-label">ACTIVE SUBSCRIPTION</div><div class="paper-route-name">Nya Cloud</div><div class="paper-route-sub">78.4 GB used / 200 GB · expires 01 DEC 2026</div></div><div class="paper-route-ms">39%</div></div><div class="paper-toggle-line"><div class="paper-toggle-copy"><span class="paper-toggle-title">自动更新</span><span class="paper-toggle-sub">下次更新：今天 21:00</span></div><button class="paper-switch is-on" type="button" role="switch" aria-checked="true" aria-label="切换自动更新"></button></div></div>
+          <div class="paper-rule"></div><div class="paper-section-head"><h3>用量与更新时间</h3><span class="paper-section-label">PROFILE / 01</span></div>
+          <div class="paper-note paper-subscription-details" style="min-height:0; grid-template-columns:1fr 1fr; gap:28px; align-items:center"><div><div class="paper-note-top"><span>流量使用</span><span>39.2%</span></div><div role="progressbar" aria-label="订阅流量使用" aria-valuemin="0" aria-valuemax="100" aria-valuenow="39.2" style="height:9px;margin-top:24px;background:var(--paper-blue-pale)"><div style="width:39.2%;height:100%;background:var(--paper-blue)"></div></div><div class="paper-note-copy" style="margin-top:12px">78.4 GB 已使用，剩余 121.6 GB</div></div><div style="border-left:1px solid var(--paper-line);padding-left:28px"><div class="paper-note-top"><span>最近更新</span><span>正常</span></div><div class="paper-note-title" style="margin-top:16px">2 小时前更新</div><div class="paper-note-copy">来源：订阅链接 · 13 个节点<br>每 24 小时自动更新</div></div></div>
+        </section>
+
+        <section class="paper-screen" id="paper-settings" role="tabpanel" aria-labelledby="paper-settings-tab" hidden>
+          <div class="paper-page-header"><div><div class="paper-kicker"><span class="paper-kicker-line"></span>04 / SETTINGS</div><h1 class="paper-heading">偏好设置</h1><p class="paper-subheading">调整启动方式与本地网络配置。</p></div><div class="paper-date"><strong>WINDOWS</strong>浅色外观</div></div>
+          <div class="paper-section-head"><h3>运行方式</h3><span class="paper-section-label">BEHAVIOUR / 01</span></div><div class="paper-route-grid"><div class="paper-toggle-line"><div class="paper-toggle-copy"><span class="paper-toggle-title">开机启动</span><span class="paper-toggle-sub">登录 Windows 后自动运行</span></div><button class="paper-switch" type="button" role="switch" aria-checked="false" aria-label="切换开机启动"></button></div><div class="paper-toggle-line"><div class="paper-toggle-copy"><span class="paper-toggle-title">最小化到托盘</span><span class="paper-toggle-sub">关闭窗口时继续在后台工作</span></div><button class="paper-switch is-on" type="button" role="switch" aria-checked="true" aria-label="切换最小化到托盘"></button></div></div>
+          <div class="paper-rule"></div><div class="paper-section-head"><h3>本地端口</h3><span class="paper-section-label">CORE / mihomo</span></div><div class="paper-note" style="min-height:0"><div class="paper-note-top"><span>MIXED PORT</span><span>ACTIVE</span></div><div class="paper-note-title" style="margin-top:18px;font-family:ui-monospace,Consolas,monospace;font-size:24px;color:var(--paper-blue)">127.0.0.1 : 7897</div><div class="paper-note-copy">HTTP / SOCKS5 mixed inbound · control port 9090</div></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const root = document.getElementById("paper-blue");
+      if (!root) return;
+      const screens = [...root.querySelectorAll(".paper-screen")];
+      const tabs = [...root.querySelectorAll(".paper-nav-btn")];
+      const showScreen = (name) => {
+        screens.forEach((screen) => { screen.hidden = screen.id !== `paper-${name}`; });
+        tabs.forEach((tab) => {
+          const active = tab.dataset.screen === name;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", String(active));
+        });
+      };
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => showScreen(tab.dataset.screen));
+        tab.addEventListener("keydown", (event) => {
+          const steps = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+          if (!(event.key in steps)) return;
+          event.preventDefault();
+          const next = tabs[(index + steps[event.key] + tabs.length) % tabs.length];
+          showScreen(next.dataset.screen);
+          next.focus();
+        });
+      });
+      root.querySelector("[data-open-nodes]").addEventListener("click", () => showScreen("proxies"));
+
+      root.querySelectorAll(".paper-switch").forEach((switchButton) => {
+        switchButton.addEventListener("click", () => {
+          const isOn = switchButton.classList.toggle("is-on");
+          switchButton.setAttribute("aria-checked", String(isOn));
+          if (switchButton.id === "paper-proxy-switch") {
+            const status = root.querySelector("#paper-proxy-status");
+            if (status) status.textContent = isOn ? "127.0.0.1:7897 · 已接管" : "未接管系统流量";
+            root.querySelector("#paper-connection-title").textContent = isOn ? "网络已连接 ↗" : "系统代理已暂停";
+          }
+        });
+      });
+
+      const groups = [...root.querySelectorAll(".paper-group")];
+      const nodes = [...root.querySelectorAll(".paper-node")];
+      const regions = [...root.querySelectorAll(".paper-region")];
+      const search = root.querySelector("#paper-node-search");
+      const notice = root.querySelector("#paper-node-notice");
+      const selectedByGroup = {
+        "节点选择": "香港 IEPL 01", "自动选择": "香港 IPLC 08",
+        "流媒体": "新加坡 02", "AI 服务": "日本 东京 IEPL 03",
+        "电报消息": "香港 IEPL 01", "微软服务": "DIRECT"
+      };
+      const baseDelays = nodes.map(node => parseInt(node.querySelector("strong").textContent,10));
+      let activeGroup = "节点选择";
+      const delayFor = (name) => nodes.find(node => node.dataset.node === name)?.querySelector("strong").textContent || "直连";
+      const renderSelection = () => {
+        groups.forEach(group => {
+          const active = group.dataset.group === activeGroup;
+          const selected = selectedByGroup[group.dataset.group];
+          group.classList.toggle("is-active", active);
+          group.setAttribute("aria-pressed", String(active));
+          group.querySelector(".paper-group-node").textContent = `${selected} · ${delayFor(selected)}`;
+          group.querySelector(".paper-group-count").textContent = selected === "DIRECT" ? "直连" : "13";
+        });
+        const selected = selectedByGroup[activeGroup];
+        root.querySelector("#paper-group-title").textContent = activeGroup;
+        root.querySelector("#paper-proxy-current").textContent = selected;
+        root.querySelector("#paper-footer-node").textContent = selected;
+        root.querySelector("#paper-current-route").textContent = selectedByGroup["节点选择"];
+        root.querySelector("#paper-current-ms").textContent = delayFor(selectedByGroup["节点选择"]);
+        nodes.forEach(node => {
+          const chosen = node.dataset.node === selected;
+          node.classList.toggle("is-selected",chosen);
+          node.setAttribute("aria-pressed",String(chosen));
+        });
+      };
+      const filterNodes = () => {
+        const query = search.value.trim().toLowerCase();
+        nodes.forEach(node => { node.hidden = !node.textContent.toLowerCase().includes(query); });
+        const visibleCount = nodes.filter(node => !node.hidden).length;
+        regions.forEach(region => {
+          const regionNodes = [...region.querySelectorAll(".paper-node")];
+          const visible = regionNodes.filter(node => !node.hidden);
+          region.hidden = visible.length === 0;
+          region.querySelector(".paper-region-count").textContent = `${visible.length} 个节点`;
+          const mean = visible.length ? Math.round(visible.reduce((sum,node) => sum + parseInt(node.querySelector("strong").textContent,10),0) / visible.length) : 0;
+          region.querySelector(".paper-region-avg").textContent = `平均 ${mean} ms`;
+        });
+        root.querySelector("#paper-search-count").textContent = `${visibleCount} 个节点`;
+        root.querySelector("#paper-empty").hidden = visibleCount > 0;
+      };
+      groups.forEach(group => group.addEventListener("click", () => { activeGroup = group.dataset.group; renderSelection(); }));
+      nodes.forEach(node => node.addEventListener("click", () => {
+        selectedByGroup[activeGroup] = node.dataset.node;
+        renderSelection();
+        notice.textContent = `已将${activeGroup}切换为 ${node.dataset.node}`;
+      }));
+      search.addEventListener("input",filterNodes);
+      root.querySelectorAll(".paper-mode button").forEach(button => button.addEventListener("click",() => {
+        root.querySelectorAll(".paper-mode button").forEach(item => item.setAttribute("aria-pressed",String(item===button)));
+        root.querySelector("#paper-mode-summary").textContent = `${button.textContent}模式 · 本地端口 7897`;
+      }));
+      const testButton = root.querySelector("#paper-test");
+      testButton.addEventListener("click", () => {
+        testButton.disabled = true;
+        testButton.querySelector("span").textContent = "测速中";
+        notice.textContent = "正在演示测速过程…";
+        window.setTimeout(() => {
+          nodes.forEach((node,index) => { node.querySelector("strong").textContent = `${baseDelays[index]+((index%3)-1)*3} ms`; });
+          testButton.disabled = false;
+          testButton.querySelector("span").textContent = "测速";
+          filterNodes(); renderSelection();
+          notice.textContent = "13 个节点测速完成 · 示例结果";
+        },650);
+      });
+      root.querySelector("#paper-refresh").addEventListener("click",() => {
+        search.value = "";
+        filterNodes();
+        notice.textContent = "节点列表已刷新 · 示例配置";
+      });
+      filterNodes(); renderSelection();
+
+      if (globalThis.Tweak) {
+        const state = { accent: "#3157f4", compact: false, radius: 9 };
+        const render = () => {
+          root.style.setProperty("--paper-blue", state.accent);
+          root.style.setProperty("--paper-blue-dark", state.accent);
+          root.classList.toggle("paper-is-compact", state.compact);
+          root.style.setProperty("--paper-radius", `${state.radius}px`);
+        };
+        render();
+        const tweak = new Tweak({ container: root, onChange: render });
+        tweak.addColorPicker(state, "accent", { label: "强调蓝", reference: "--paper-blue" });
+        tweak.addSlider(state, "radius", { label: "纸面圆角", min: 0, max: 18, unit: "px", reference: "--paper-radius" });
+        tweak.addToggle(state, "compact", { label: "紧凑间距", reference: "paper.compact" });
+      }
+    })();
+  </script>
+</div>
