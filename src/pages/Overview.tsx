@@ -47,6 +47,7 @@ export default function Overview() {
   const summary = groups.slice(0, 4);
 
   const running = status?.running ?? false;
+  const proxyDown = running && !(status?.listeningPort && status.listeningPort > 0);
   const currentProfile = profiles.find((p) => p.uid === status?.profileUid);
 
   async function updateSubscription() {
@@ -75,7 +76,11 @@ export default function Overview() {
           <div className="subtitle">
             {currentProfile ? `当前订阅 ${currentProfile.name}` : "尚未添加订阅"}
             {" · "}
-            {running ? "内核运行中" : status?.lastError ?? "内核未运行"}
+            {proxyDown
+              ? (status?.lastError ?? "代理端口没有启动")
+              : running
+                ? "内核运行中"
+                : (status?.lastError ?? "内核未运行")}
           </div>
         </div>
         <div className="head-actions">
@@ -95,7 +100,7 @@ export default function Overview() {
           <section className="hero">
             <div className="hero-top">
               <div className="hero-label">
-                <i className={`dot ${running ? "green" : "red"}`} />
+                <i className={`dot ${proxyDown ? "orange" : running ? "green" : "red"}`} />
                 NETWORK / LIVE
               </div>
               <div className="hero-window">最近 60 秒</div>
@@ -127,7 +132,9 @@ export default function Overview() {
             <TrafficChart samples={traffic} />
 
             <div className="hero-foot">
-              <span>混合端口 {status?.mixedPort ?? "--"}</span>
+              <span>
+                {proxyDown ? "代理端口未启动" : `混合端口 ${status?.listeningPort ?? status?.mixedPort ?? "--"}`}
+              </span>
               <span className="hero-legend">
                 <span>
                   <i style={{ background: "#ffffff" }} />
@@ -186,15 +193,17 @@ export default function Overview() {
               <div className="control-text">
                 <div className="control-title">系统代理</div>
                 <div className="control-sub">
-                  {settings?.systemProxy
-                    ? `已接管 · 127.0.0.1:${status?.mixedPort ?? ""}`
-                    : "未接管系统流量"}
+                  {proxyDown
+                    ? "代理端口未启动，无法接管"
+                    : settings?.systemProxy
+                      ? `已接管 · 127.0.0.1:${status?.listeningPort ?? status?.mixedPort ?? ""}`
+                      : "未接管系统流量"}
                 </div>
               </div>
               <Switch
                 label="系统代理"
                 checked={settings?.systemProxy ?? false}
-                disabled={!running}
+                disabled={!running || proxyDown}
                 onChange={(next) => patchSettings({ systemProxy: next }).catch(() => {})}
               />
             </div>

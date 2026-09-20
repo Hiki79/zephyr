@@ -22,12 +22,14 @@ pub struct CoreManager {
     pub child: Option<CommandChild>,
     pub running: bool,
     pub started_at: i64,
+    /// The proxy port the core actually bound; 0 or None means it could not.
+    pub listening_port: Option<u16>,
     pub last_error: Option<String>,
 }
 
 impl Default for CoreManager {
     fn default() -> Self {
-        Self { child: None, running: false, started_at: 0, last_error: None }
+        Self { child: None, running: false, started_at: 0, listening_port: None, last_error: None }
     }
 }
 
@@ -205,6 +207,25 @@ impl CoreManager {
 
         Ok(())
     }
+}
+
+/// True when nothing else on this machine is already listening on the port.
+pub fn port_is_free(port: u16) -> bool {
+    std::net::TcpListener::bind(("127.0.0.1", port)).is_ok()
+}
+
+/// Another Clash client may already hold the preferred port. Walk forward to
+/// the first free one rather than starting a core with no proxy listener.
+pub fn pick_free_port(preferred: u16) -> u16 {
+    if port_is_free(preferred) {
+        return preferred;
+    }
+    for candidate in preferred.saturating_add(1)..preferred.saturating_add(40) {
+        if port_is_free(candidate) {
+            return candidate;
+        }
+    }
+    preferred
 }
 
 /// mihomo downloads its own geo databases on first run, but that needs a working

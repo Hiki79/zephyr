@@ -68,6 +68,8 @@ pub struct Status {
     system_proxy: bool,
     system_proxy_actual: bool,
     tun: bool,
+    /// What the core actually bound, which may differ from the setting.
+    listening_port: Option<u16>,
     profile_name: Option<String>,
     profile_uid: Option<String>,
     core_version: Option<String>,
@@ -77,9 +79,9 @@ pub struct Status {
 #[tauri::command]
 async fn get_status(state: State<'_, AppState>) -> Result<Status, String> {
     let settings = state.snapshot_settings();
-    let (running, started_at, last_error) = {
+    let (running, started_at, last_error, listening_port) = {
         let core = state.core.lock().unwrap();
-        (core.running, core.started_at, core.last_error.clone())
+        (core.running, core.started_at, core.last_error.clone(), core.listening_port)
     };
     let profile = {
         let list = state.profiles.lock().unwrap();
@@ -109,6 +111,7 @@ async fn get_status(state: State<'_, AppState>) -> Result<Status, String> {
         system_proxy: settings.system_proxy,
         system_proxy_actual,
         tun: settings.tun,
+        listening_port,
         profile_uid: profile.as_ref().map(|p| p.0.clone()),
         profile_name: profile.map(|p| p.1),
         core_version,
@@ -175,8 +178,35 @@ async fn patch_settings(
 
 // ---------------------------------------------------------------- core
 
+/// Another Clash client may hold our preferred ports. Move to free ones and
+/// persist the change, so the settings page shows the port actually in use.
+fn resolve_ports(state: &State<'_, AppState>) -> (Settings, Option<(u16, u16)>) {
+    let before = state.snapshot_settings();
+    let mixed = core::pick_free_port(before.mixed_port);
+    let ctrl = if core::port_is_free(before.ctrl_port) {
+        before.ctrl_port
+    } else {
+        core::pick_free_port(before.ctrl_port)
+    };
+
+    if mixed == before.mixed_port && ctrl == before.ctrl_port {
+        return (before, None);
+    }
+
+    {
+        let mut settings = state.settings.lock().unwrap();
+        settings.mixed_port = mixed;
+        settings.ctrl_port = ctrl;
+    }
+    state.save_settings();
+    (state.snapshot_settings(), Some((before.mixed_port, mixed)))
+}
+
 async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Result<(), String> {
-    let settings = state.snapshot_settings();
+    let (settings, moved) = resolve_ports(state);
+    if let Some((from, to)) = moved {
+        let _ = app.emit("zephyr://port-moved", serde_json::json!({ "from": from, "to": to }));
+    }
     let config = core::write_runtime_config(&state.dirs.runtime, &state.dirs.profiles, &settings)
         .map_err(err)?;
 
@@ -187,10 +217,19 @@ async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Res
 
     let client = Mihomo::new(settings.ctrl_port, &settings.secret);
     let ready = client.wait_ready(30).await;
+    let listening = if ready { client.mixed_port().await } else { None };
     {
         let mut core = state.core.lock().unwrap();
         core.running = ready;
-        core.last_error = if ready { None } else { Some("内核启动后没有响应".into()) };
+        core.listening_port = listening;
+        core.last_error = match (ready, listening) {
+            (false, _) => Some("内核启动后没有响应".into()),
+            (true, None) | (true, Some(0)) => Some(format!(
+                "端口 {} 被其他程序占用，代理没有启动",
+                settings.mixed_port
+            )),
+            _ => None,
+        };
     }
     let _ = app.emit("zephyr://core", ready);
 
@@ -438,6 +477,49 @@ fn spawn_stream_bridge(app: AppHandle, path: &'static str, event: &'static str) 
     });
 }
 
+/// The core serves `/logs` over WebSocket only, and authenticates with a
+/// header rather than a query parameter, so the webview cannot subscribe to it
+/// directly. Bridge it here and republish each line as a window event.
+fn spawn_log_bridge(app: AppHandle) {
+    tauri::async_runtime::spawn(async move {
+        use futures_util::StreamExt;
+        use tokio_tungstenite::tungstenite::client::IntoClientRequest;
+
+        loop {
+            let (port, secret) = {
+                let state = app.state::<AppState>();
+                let s = state.settings.lock().unwrap();
+                (s.ctrl_port, s.secret.clone())
+            };
+
+            let connected = async {
+                let mut request =
+                    format!("ws://127.0.0.1:{}/logs?level=info", port).into_client_request().ok()?;
+                let value = format!("Bearer {}", secret).parse().ok()?;
+                request.headers_mut().insert("Authorization", value);
+                tokio_tungstenite::connect_async(request).await.ok()
+            }
+            .await;
+
+            if let Some((stream, _)) = connected {
+                let (_, mut read) = stream.split();
+                while let Some(Ok(message)) = read.next().await {
+                    if let Ok(text) = message.into_text() {
+                        if text.trim().is_empty() {
+                            continue;
+                        }
+                        if let Ok(value) = serde_json::from_str::<Value>(&text) {
+                            let _ = app.emit("zephyr://log", value);
+                        }
+                    }
+                }
+            }
+
+            tokio::time::sleep(std::time::Duration::from_millis(1500)).await;
+        }
+    });
+}
+
 // ---------------------------------------------------------------- setup
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -490,7 +572,11 @@ pub fn run() {
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<AppState>();
-                let settings = state.settings.lock().unwrap().clone();
+                let (settings, moved) = resolve_ports(&state);
+                if let Some((from, to)) = moved {
+                    let _ = handle
+                        .emit("zephyr://port-moved", serde_json::json!({ "from": from, "to": to }));
+                }
 
                 match core::write_runtime_config(&state.dirs.runtime, &state.dirs.profiles, &settings)
                 {
@@ -505,11 +591,18 @@ pub fn run() {
                         } else {
                             let client = Mihomo::new(settings.ctrl_port, &settings.secret);
                             let ready = client.wait_ready(40).await;
+                            let listening = if ready { client.mixed_port().await } else { None };
                             let mut core = state.core.lock().unwrap();
                             core.running = ready;
-                            if !ready {
-                                core.last_error = Some("内核启动后没有响应".into());
-                            }
+                            core.listening_port = listening;
+                            core.last_error = match (ready, listening) {
+                                (false, _) => Some("内核启动后没有响应".into()),
+                                (true, None) | (true, Some(0)) => Some(format!(
+                                    "端口 {} 被其他程序占用，代理没有启动",
+                                    settings.mixed_port
+                                )),
+                                _ => None,
+                            };
                         }
                     }
                     Err(e) => {
@@ -518,7 +611,8 @@ pub fn run() {
                     }
                 }
 
-                if settings.system_proxy {
+                let listening = state.core.lock().unwrap().listening_port;
+                if settings.system_proxy && matches!(listening, Some(p) if p > 0) {
                     let _ = sysproxy_win::apply(true, settings.mixed_port, &settings.bypass);
                 }
                 let _ = handle.emit("zephyr://core", true);
@@ -526,6 +620,7 @@ pub fn run() {
 
             spawn_stream_bridge(app.handle().clone(), "/traffic", "zephyr://traffic");
             spawn_stream_bridge(app.handle().clone(), "/memory", "zephyr://memory");
+            spawn_log_bridge(app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

@@ -27,6 +27,8 @@ anyhow = "1"
 chrono = "0.4"
 sysproxy = "0.3"
 rand = "0.8"
+# mihomo serves /logs over WebSocket only; /traffic and /memory stream over plain HTTP
+tokio-tungstenite = "0.30"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.59", features = ["Win32_System_Threading", "Win32_Foundation"] }

@@ -70,6 +70,20 @@ impl Mihomo {
         self.get_json("/memory", 3).await
     }
 
+    /// The proxy port the core actually bound. It reports 0 when the port was
+    /// already taken, which is the only way to tell that the proxy is dead.
+    pub async fn mixed_port(&self) -> Option<u16> {
+        let configs = self.configs().await.ok()?;
+        for key in ["mixed-port", "port", "socks-port"] {
+            if let Some(port) = configs.get(key).and_then(|v| v.as_u64()) {
+                if port > 0 {
+                    return Some(port as u16);
+                }
+            }
+        }
+        Some(0)
+    }
+
     /// Pick a node inside a `select` group.
     pub async fn select(&self, group: &str, node: &str) -> Result<()> {
         let resp = Self::client(8)?

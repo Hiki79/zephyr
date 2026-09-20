@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
-fn d_mixed_port() -> u16 { 7897 }
+// Clash Verge defaults to 7897, so start somewhere else.
+fn d_mixed_port() -> u16 { 7899 }
 fn d_ctrl_port() -> u16 { 9097 }
 fn d_mode() -> String { "rule".into() }
 fn d_bypass() -> String {

@@ -29,6 +29,8 @@ export type Status = {
   systemProxy: boolean;
   systemProxyActual: boolean;
   tun: boolean;
+  /** The proxy port the core actually bound; 0 means it could not bind one. */
+  listeningPort: number | null;
   profileName: string | null;
   profileUid: string | null;
   coreVersion: string | null;

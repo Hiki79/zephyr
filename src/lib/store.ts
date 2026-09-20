@@ -50,6 +50,7 @@ type State = {
 
 let toastSeq = 0;
 let logSeq = 0;
+let booted = false;
 
 function levelOf(line: string): LogLine["level"] {
   const lower = line.toLowerCase();
@@ -163,6 +164,9 @@ export const useStore = create<State>((set, get) => ({
   clearLogs: () => set({ logs: [] }),
 
   boot: async () => {
+    if (booted) return;
+    booted = true;
+
     await Promise.all([get().refreshStatus(), get().refreshSettings(), get().refreshProfiles()]);
     await get().refreshProxies();
     await get().refreshCounters();
@@ -173,20 +177,42 @@ export const useStore = create<State>((set, get) => ({
       set((s) => ({ traffic: [...s.traffic.slice(1 - HISTORY), sample] }));
     });
 
-    listen<string>("core://stdout", (event) => {
-      const text = event.payload ?? "";
+    const pushLog = (text: string, level: LogLine["level"]) => {
       if (!text.trim()) return;
       const line: LogLine = {
         id: ++logSeq,
         time: new Date().toLocaleTimeString("zh-CN", { hour12: false }),
         text,
-        level: levelOf(text),
+        level,
       };
       set((s) => ({ logs: [...s.logs.slice(-(MAX_LOGS - 1)), line] }));
+    };
+
+    // The core's own log stream: routing decisions, DNS, connection errors.
+    listen<{ type: string; payload: string }>("zephyr://log", (event) => {
+      const type = (event.payload?.type ?? "info").toLowerCase();
+      const level: LogLine["level"] =
+        type === "error" ? "error" : type === "warning" || type === "warn" ? "warn" : "info";
+      pushLog(event.payload?.payload ?? "", level);
+    });
+
+    // Anything the core writes before its API is up, plus crash output.
+    // Its routine logfmt lines duplicate the log stream above, so drop those.
+    const isLogfmtEcho = (line: string) => /^time=".*"\s+level=\w+\s+msg=/.test(line.trim());
+    listen<string>("core://stdout", (event) => {
+      const text = event.payload ?? "";
+      if (isLogfmtEcho(text)) return;
+      pushLog(text, levelOf(text));
     });
 
     listen<{ inuse: number }>("zephyr://memory", (event) => {
       set({ memory: event.payload?.inuse ?? 0 });
+    });
+
+    listen<{ from: number; to: number }>("zephyr://port-moved", (event) => {
+      const { from, to } = event.payload ?? { from: 0, to: 0 };
+      get().toast(`端口 ${from} 被占用，已改用 ${to}`, "err");
+      get().refreshSettings();
     });
 
     listen("zephyr://core", () => {
