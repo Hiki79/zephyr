@@ -453,6 +453,7 @@ fn open_config_dir(state: State<'_, AppState>) -> Result<(), String> {
 fn spawn_stream_bridge(app: AppHandle, path: &'static str, event: &'static str) {
     tauri::async_runtime::spawn(async move {
         use futures_util::StreamExt;
+        use std::time::Duration;
         loop {
             let (port, secret) = {
                 let state = app.state::<AppState>();
@@ -460,31 +461,43 @@ fn spawn_stream_bridge(app: AppHandle, path: &'static str, event: &'static str) 
                 (s.ctrl_port, s.secret.clone())
             };
 
-            let request = reqwest::Client::builder()
+            let client = reqwest::Client::builder()
                 .no_proxy()
-                .build()
-                .ok()
-                .map(|c| {
-                    c.get(format!("http://127.0.0.1:{}{}", port, path))
-                        .bearer_auth(&secret)
-                        .send()
-                });
+                .connect_timeout(Duration::from_secs(5))
+                .build();
 
-            if let Some(pending) = request {
-                if let Ok(resp) = pending.await {
+            if let Ok(client) = client {
+                let sent = client
+                    .get(format!("http://127.0.0.1:{}{}", port, path))
+                    .bearer_auth(&secret)
+                    .send()
+                    .await;
+                if let Ok(resp) = sent {
                     let mut stream = resp.bytes_stream();
                     let mut buffer = String::new();
-                    while let Some(Ok(chunk)) = stream.next().await {
-                        buffer.push_str(&String::from_utf8_lossy(&chunk));
-                        while let Some(index) = buffer.find('\n') {
-                            let line: String = buffer.drain(..=index).collect();
-                            let line = line.trim().to_string();
-                            if line.is_empty() {
-                                continue;
+                    // The core emits /traffic and /memory at least once a second.
+                    // If it goes quiet for much longer the connection is dead —
+                    // typically half-open after a core restart (port drift), where
+                    // the read would otherwise block forever and the UI would
+                    // freeze at its last value. Time out and reconnect instead.
+                    loop {
+                        match tokio::time::timeout(Duration::from_secs(6), stream.next()).await {
+                            Ok(Some(Ok(chunk))) => {
+                                buffer.push_str(&String::from_utf8_lossy(&chunk));
+                                while let Some(index) = buffer.find('\n') {
+                                    let line: String = buffer.drain(..=index).collect();
+                                    let line = line.trim().to_string();
+                                    if line.is_empty() {
+                                        continue;
+                                    }
+                                    if let Ok(value) = serde_json::from_str::<Value>(&line) {
+                                        let _ = app.emit(event, value);
+                                    }
+                                }
                             }
-                            if let Ok(value) = serde_json::from_str::<Value>(&line) {
-                                let _ = app.emit(event, value);
-                            }
+                            // Stream error, clean end, or a stall past the timeout:
+                            // drop this connection and reconnect on the current port.
+                            _ => break,
                         }
                     }
                 }
