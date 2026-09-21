@@ -38,6 +38,8 @@ pub struct Settings {
     pub auto_update_hours: u32,
     #[serde(default = "d_log_level")]
     pub log_level: String,
+    /// Groups the overview's policy-routing card shows; empty means the first few.
+    pub pinned_groups: Vec<String>,
 }
 
 impl Default for Settings {
@@ -59,6 +61,7 @@ impl Default for Settings {
             test_url: d_test_url(),
             auto_update_hours: d_auto_update(),
             log_level: d_log_level(),
+            pinned_groups: Vec::new(),
         }
     }
 }

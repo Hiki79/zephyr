@@ -5,10 +5,13 @@ import {
   ChevronRight,
   Cpu,
   Download,
+  ListChecks,
   Monitor,
   RefreshCw,
   Route,
   Shield,
+  Square,
+  SquareCheck,
   Upload,
   Zap,
 } from "lucide-react";
@@ -16,7 +19,10 @@ import { api } from "../lib/api";
 import { groupLatency, resolveChain, selectGroups, useStore } from "../lib/store";
 import { formatBytes, formatUptime, splitRate } from "../lib/format";
 import TrafficChart from "../components/TrafficChart";
-import { Delay, Segmented, Switch, useTick } from "../components/bits";
+import { Delay, Dialog, Segmented, Switch, useTick } from "../components/bits";
+
+/** How many groups the routing card shows until the user has picked their own. */
+const DEFAULT_SUMMARY = 4;
 
 export default function Overview() {
   useTick();
@@ -37,14 +43,23 @@ export default function Overview() {
   const refreshProfiles = useStore((s) => s.refreshProfiles);
 
   const [updating, setUpdating] = useState(false);
+  const [picking, setPicking] = useState(false);
+  const [draft, setDraft] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
 
   const latest = traffic[traffic.length - 1] ?? { up: 0, down: 0 };
   const [downValue, downUnit] = splitRate(latest.down);
   const [upValue, upUnit] = splitRate(latest.up);
 
   const groups = useMemo(() => selectGroups(proxies), [proxies]);
-  // The summary is deliberately short: the first few groups, nothing more.
-  const summary = groups.slice(0, 4);
+  // The card is a curated summary: the groups the user pinned, in config
+  // order, or the first few until they have picked any. The proxies page
+  // always shows everything.
+  const pinned = settings?.pinnedGroups ?? [];
+  const summary =
+    pinned.length === 0
+      ? groups.slice(0, DEFAULT_SUMMARY)
+      : groups.filter((group) => pinned.includes(group.name));
 
   const running = status?.running ?? false;
   const proxyDown = running && !(status?.listeningPort && status.listeningPort > 0);
@@ -64,6 +79,33 @@ export default function Overview() {
       toast(String(e), "err");
     } finally {
       setUpdating(false);
+    }
+  }
+
+  function openPicker() {
+    // Start from what the card shows now, so the defaults come pre-checked.
+    setDraft(summary.map((group) => group.name));
+    setPicking(true);
+  }
+
+  function toggleDraft(name: string) {
+    setDraft((d) => (d.includes(name) ? d.filter((n) => n !== name) : [...d, name]));
+  }
+
+  async function savePicker(next: string[]) {
+    setSaving(true);
+    try {
+      await patchSettings({ pinnedGroups: next });
+      setPicking(false);
+      toast(
+        next.length === 0
+          ? `已恢复默认，显示前 ${DEFAULT_SUMMARY} 个分组`
+          : `策略路由现在显示 ${next.length} 个分组`
+      );
+    } catch {
+      /* the store already showed the error */
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -259,19 +301,37 @@ export default function Overview() {
           <div className="card-head">
             <div>
               <h2>
-                策略路由 <span className="count">({groups.length})</span>
+                策略路由{" "}
+                <span className="count">
+                  ({summary.length} / {groups.length})
+                </span>
               </h2>
-              <div className="card-desc">直接在这里换节点，改动立即生效</div>
+              <div className="card-desc">
+                {pinned.length === 0
+                  ? "直接在这里换节点，改动立即生效 · 现在显示前几个分组，可以自己选"
+                  : "直接在这里换节点，改动立即生效 · 显示的是你选的分组"}
+              </div>
             </div>
             <div className="card-actions">
+              <button className="btn sm" onClick={openPicker} disabled={groups.length === 0}>
+                <ListChecks />
+                选择分组
+              </button>
               <button className="btn sm" onClick={() => setPage("proxies")}>
                 全部节点
               </button>
             </div>
           </div>
 
-          {summary.length === 0 ? (
+          {groups.length === 0 ? (
             <div className="table-foot">还没有策略组，添加订阅后这里会列出来。</div>
+          ) : summary.length === 0 ? (
+            <div className="table-foot">
+              <span>你选的分组在当前订阅里都不存在，重新选一下。</span>
+              <button className="btn sm" onClick={openPicker}>
+                重新选择
+              </button>
+            </div>
           ) : (
             <table className="table">
               <thead>
@@ -321,6 +381,58 @@ export default function Overview() {
           )}
         </section>
       </div>
+
+      {picking && (
+        <Dialog
+          title="选择要显示的分组"
+          onClose={() => setPicking(false)}
+          footer={
+            <>
+              <span className="pick-count">
+                {draft.length === 0 ? "至少勾选一个分组" : `已选 ${draft.length} / ${groups.length}`}
+              </span>
+              <button className="btn" onClick={() => savePicker([])} disabled={saving}>
+                恢复默认
+              </button>
+              <button className="btn" onClick={() => setPicking(false)} disabled={saving}>
+                取消
+              </button>
+              <button
+                className="btn primary"
+                onClick={() => savePicker(draft)}
+                disabled={saving || draft.length === 0}
+              >
+                保存
+              </button>
+            </>
+          }
+        >
+          <div className="dialog-hint">
+            勾选的分组会出现在总览的策略路由卡片里，顺序跟订阅一致。节点页始终显示全部分组。
+          </div>
+          <div className="pick-list">
+            {groups.map((group) => {
+              const on = draft.includes(group.name);
+              return (
+                <button
+                  key={group.name}
+                  type="button"
+                  className={`pick-row ${on ? "on" : ""}`}
+                  aria-pressed={on}
+                  onClick={() => toggleDraft(group.name)}
+                >
+                  {on ? <SquareCheck /> : <Square />}
+                  <span style={{ minWidth: 0 }}>
+                    <span className="pick-name">{group.name}</span>
+                    <span className="pick-sub">{resolveChain(proxies, group.now)}</span>
+                  </span>
+                  <span className="tag">{group.type}</span>
+                </button>
+              );
+            })}
+          </div>
+        </Dialog>
+      )}
     </>
   );
 }

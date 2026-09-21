@@ -263,3 +263,16 @@ pub fn seed_geo_files(runtime_dir: &Path) {
 fn roaming_dir() -> PathBuf {
     std::env::var("APPDATA").map(PathBuf::from).unwrap_or_else(|_| PathBuf::from("."))
 }
+
+/// A killed core lets go of its ports a moment after `kill` returns. Wait for
+/// them to come free so the next probe only ever sees other programs; give up
+/// after `max` and let the probe decide.
+pub async fn wait_ports_released(ports: &[u16], max: std::time::Duration) {
+    let started = std::time::Instant::now();
+    while started.elapsed() < max {
+        if ports.iter().all(|port| port_is_free(*port)) {
+            return;
+        }
+        tokio::time::sleep(std::time::Duration::from_millis(60)).await;
+    }
+}

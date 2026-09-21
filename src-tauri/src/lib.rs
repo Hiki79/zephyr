@@ -207,6 +207,16 @@ fn resolve_ports(state: &State<'_, AppState>) -> (Settings, Option<(u16, u16)>) 
 }
 
 async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Result<(), String> {
+    // Our own previous core holds the ports until it is fully gone. Stop it
+    // before probing, or the probe mistakes it for another program and walks
+    // the ports forward on every restart.
+    let held = {
+        let current = state.snapshot_settings();
+        state.core.lock().unwrap().stop();
+        [current.mixed_port, current.ctrl_port]
+    };
+    core::wait_ports_released(&held, std::time::Duration::from_secs(3)).await;
+
     let (settings, moved) = resolve_ports(state);
     if let Some((from, to)) = moved {
         let _ = app.emit("zephyr://port-moved", serde_json::json!({ "from": from, "to": to }));
@@ -234,6 +244,10 @@ async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Res
             )),
             _ => None,
         };
+    }
+    // A moved port leaves the Windows proxy setting pointing at the old one.
+    if moved.is_some() && settings.system_proxy && matches!(listening, Some(p) if p > 0) {
+        let _ = sysproxy_win::apply(true, settings.mixed_port, &settings.bypass);
     }
     let _ = app.emit("zephyr://core", ready);
 

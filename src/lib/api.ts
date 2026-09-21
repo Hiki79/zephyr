@@ -17,6 +17,8 @@ export type Settings = {
   testUrl: string;
   autoUpdateHours: number;
   logLevel: string;
+  /** Group names the overview's routing card shows; empty means the first few. */
+  pinnedGroups: string[];
 };
 
 export type Status = {
