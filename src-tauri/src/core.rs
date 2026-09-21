@@ -25,11 +25,21 @@ pub struct CoreManager {
     /// The proxy port the core actually bound; 0 or None means it could not.
     pub listening_port: Option<u16>,
     pub last_error: Option<String>,
+    /// Kill-on-close job every spawned core is assigned to, so no core can
+    /// outlive this process, and `stop()` can end all of them at once.
+    job: Option<crate::procs::Job>,
 }
 
 impl Default for CoreManager {
     fn default() -> Self {
-        Self { child: None, running: false, started_at: 0, listening_port: None, last_error: None }
+        Self {
+            child: None,
+            running: false,
+            started_at: 0,
+            listening_port: None,
+            last_error: None,
+            job: crate::procs::Job::new(),
+        }
     }
 }
 
@@ -154,6 +164,11 @@ pub fn write_runtime_config(
 
 impl CoreManager {
     pub fn stop(&mut self) {
+        // Ending the whole job also catches a core that a racing restart
+        // spawned but never got recorded in `self.child`.
+        if let Some(job) = &self.job {
+            job.terminate();
+        }
         if let Some(child) = self.child.take() {
             let _ = child.kill();
         }
@@ -178,6 +193,15 @@ impl CoreManager {
             ])
             .spawn()
             .map_err(|e| anyhow!("内核启动失败: {e}"))?;
+
+        // Tie the core's lifetime to ours. If the job could not be created
+        // (very old Windows), fall back to plain child tracking.
+        if self.job.is_none() {
+            self.job = crate::procs::Job::new();
+        }
+        if let Some(job) = &self.job {
+            job.assign(child.pid());
+        }
 
         self.child = Some(child);
         self.running = true;
@@ -206,6 +230,23 @@ impl CoreManager {
         });
 
         Ok(())
+    }
+}
+
+/// Where Tauri places the bundled core: next to our own executable, both in
+/// `tauri dev` (target dir) and in the installed app.
+pub fn sidecar_path() -> Option<PathBuf> {
+    let exe = std::env::current_exe().ok()?;
+    Some(exe.parent()?.join("mihomo.exe"))
+}
+
+/// Kill cores a previous instance of *this* install left behind (it crashed,
+/// or the installer force-killed it before its exit hook ran). Matches on the
+/// full path, so another client's mihomo is never touched.
+pub fn kill_stale_cores() -> usize {
+    match sidecar_path() {
+        Some(path) => crate::procs::kill_processes_at(&path),
+        None => 0,
     }
 }
 

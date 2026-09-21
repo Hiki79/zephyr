@@ -1,5 +1,6 @@
 mod core;
 mod mihomo;
+mod procs;
 mod profiles;
 mod settings;
 mod sysproxy_win;
@@ -619,6 +620,22 @@ pub fn run() {
             let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
                 let state = handle.state::<AppState>();
+
+                // A previous instance that died without its exit hook (crash,
+                // or the installer force-killing it) leaves cores behind. They
+                // hold our ports, so the probe below would walk the ports
+                // forward for no reason. Clear them first and let the ports
+                // come free.
+                let swept = core::kill_stale_cores();
+                if swept > 0 {
+                    let held = {
+                        let s = state.settings.lock().unwrap();
+                        [s.mixed_port, s.ctrl_port]
+                    };
+                    core::wait_ports_released(&held, std::time::Duration::from_secs(3)).await;
+                    let _ = handle.emit("core://stdout", format!("已清理 {} 个残留内核进程", swept));
+                }
+
                 let (settings, moved) = resolve_ports(&state);
                 if let Some((from, to)) = moved {
                     let _ = handle
