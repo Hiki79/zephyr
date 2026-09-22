@@ -13,6 +13,15 @@ fn d_auto_update() -> u32 { 24 }
 fn d_log_level() -> String { "info".into() }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProxySnapshot {
+    pub enable: bool,
+    pub host: String,
+    pub port: u16,
+    pub bypass: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct Settings {
     #[serde(default = "d_mixed_port")]
@@ -40,6 +49,7 @@ pub struct Settings {
     pub log_level: String,
     /// Groups the overview's policy-routing card shows; empty means the first few.
     pub pinned_groups: Vec<String>,
+    pub proxy_snapshot: Option<ProxySnapshot>,
 }
 
 impl Default for Settings {
@@ -62,6 +72,7 @@ impl Default for Settings {
             auto_update_hours: d_auto_update(),
             log_level: d_log_level(),
             pinned_groups: Vec::new(),
+            proxy_snapshot: None,
         }
     }
 }

@@ -3,7 +3,6 @@ import { invoke } from "@tauri-apps/api/core";
 export type Settings = {
   mixedPort: number;
   ctrlPort: number;
-  secret: string;
   mode: "rule" | "global" | "direct";
   systemProxy: boolean;
   tun: boolean;

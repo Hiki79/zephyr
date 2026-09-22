@@ -251,8 +251,9 @@ export function selectGroups(proxies: Record<string, ProxyItem>): ProxyItem[] {
   const isGroup = (p: ProxyItem) => Array.isArray(p.all) && p.all.length > 0;
   const global = proxies["GLOBAL"];
   const ordered = global?.all?.filter((name) => proxies[name] && isGroup(proxies[name])) ?? [];
-  if (ordered.length > 0) return ordered.map((name) => proxies[name]);
-  return Object.values(proxies).filter(isGroup).filter((p) => p.name !== "GLOBAL");
+  const result = ordered.length > 0 ? ordered.map((name) => proxies[name]) : Object.values(proxies).filter(isGroup).filter((p) => p.name !== "GLOBAL");
+  if (global && isGroup(global) && !result.some((group) => group.name === "GLOBAL")) result.unshift(global);
+  return result;
 }
 
 /** Last measured latency of a node, 0 when it timed out. */

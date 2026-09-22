@@ -25,6 +25,7 @@ pub struct CoreManager {
     /// The proxy port the core actually bound; 0 or None means it could not.
     pub listening_port: Option<u16>,
     pub last_error: Option<String>,
+    pub generation: u64,
     /// Kill-on-close job every spawned core is assigned to, so no core can
     /// outlive this process, and `stop()` can end all of them at once.
     job: Option<crate::procs::Job>,
@@ -38,6 +39,7 @@ impl Default for CoreManager {
             started_at: 0,
             listening_port: None,
             last_error: None,
+            generation: 0,
             job: crate::procs::Job::new(),
         }
     }
@@ -97,11 +99,7 @@ pub fn build_config(profile_yaml: &str, settings: &Settings) -> Result<String> {
     root.insert(yaml_str("tun"), Value::Mapping(tun));
 
     // Only supply DNS when the subscription does not bring its own.
-    let has_dns = root
-        .get(&yaml_str("dns"))
-        .and_then(|d| d.as_mapping())
-        .map(|m| m.get(&yaml_str("enable")).and_then(|v| v.as_bool()).unwrap_or(false))
-        .unwrap_or(false);
+    let has_dns = root.contains_key(&yaml_str("dns"));
     if !has_dns {
         root.insert(yaml_str("dns"), default_dns());
     }
@@ -151,7 +149,8 @@ pub fn write_runtime_config(
     let source = match &settings.current_profile {
         Some(uid) => {
             let path = profiles_dir.join(format!("{}.yaml", uid));
-            std::fs::read_to_string(&path).unwrap_or_else(|_| BLANK_PROFILE.to_string())
+            std::fs::read_to_string(&path)
+                .map_err(|e| anyhow!("无法读取当前订阅配置: {e}"))?
         }
         None => BLANK_PROFILE.to_string(),
     };
@@ -164,6 +163,7 @@ pub fn write_runtime_config(
 
 impl CoreManager {
     pub fn stop(&mut self) {
+        self.generation += 1;
         // Ending the whole job also catches a core that a racing restart
         // spawned but never got recorded in `self.child`.
         if let Some(job) = &self.job {
@@ -173,6 +173,7 @@ impl CoreManager {
             let _ = child.kill();
         }
         self.running = false;
+        self.listening_port = None;
         self.started_at = 0;
     }
 
@@ -199,8 +200,9 @@ impl CoreManager {
         if self.job.is_none() {
             self.job = crate::procs::Job::new();
         }
-        if let Some(job) = &self.job {
-            job.assign(child.pid());
+        if !self.job.as_ref().is_some_and(|job| job.assign(child.pid())) {
+            let _ = child.kill();
+            return Err(anyhow!("无法为内核建立进程生命周期保护，已停止启动"));
         }
 
         self.child = Some(child);
@@ -210,6 +212,7 @@ impl CoreManager {
 
         // Drain the core stdout/stderr so its pipe never fills up.
         let handle = app.clone();
+        let generation = self.generation;
         tauri::async_runtime::spawn(async move {
             use tauri::Emitter;
             while let Some(event) = rx.recv().await {
@@ -221,6 +224,7 @@ impl CoreManager {
                         }
                     }
                     CommandEvent::Terminated(payload) => {
+                        crate::on_core_terminated(&handle, generation, payload.code).await;
                         let _ = handle.emit("core://terminated", payload.code);
                         break;
                     }

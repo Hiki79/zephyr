@@ -14,6 +14,7 @@ use serde::Serialize;
 use serde_json::Value;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use tokio::sync::Mutex as AsyncMutex;
 use tauri::{AppHandle, Emitter, Manager, State};
 
 pub struct Dirs {
@@ -29,6 +30,7 @@ pub struct AppState {
     pub settings: Mutex<Settings>,
     pub profiles: Mutex<ProfileList>,
     pub core: Mutex<CoreManager>,
+    pub restart_lock: AsyncMutex<()>,
 }
 
 impl AppState {
@@ -56,6 +58,39 @@ fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
 
+pub async fn on_core_terminated(app: &AppHandle, generation: u64, code: Option<i32>) {
+    let state = app.state::<AppState>();
+    let should_restore = {
+        let mut core = state.core.lock().unwrap();
+        if core.generation != generation {
+            return;
+        }
+        core.running = false;
+        core.listening_port = None;
+        core.last_error = Some(match code {
+            Some(value) => format!("内核已退出（代码 {value}）"),
+            None => "内核已退出".into(),
+        });
+        state.snapshot_settings().system_proxy
+    };
+    if should_restore {
+        let settings = state.snapshot_settings();
+        if sysproxy_win::is_ours(settings.mixed_port) {
+            if let Some(snapshot) = settings.proxy_snapshot.as_ref() {
+                let _ = sysproxy_win::restore(snapshot);
+            } else {
+                let _ = sysproxy_win::apply(false, settings.mixed_port, &settings.bypass);
+            }
+        }
+        let mut settings = state.settings.lock().unwrap();
+        settings.system_proxy = false;
+        settings.proxy_snapshot = None;
+        let _ = settings.save(&state.dirs.settings_file);
+    }
+    let _ = app.emit("zephyr://core", false);
+    tray::sync(app);
+}
+
 // ---------------------------------------------------------------- status
 
 #[derive(Serialize)]
@@ -65,7 +100,6 @@ pub struct Status {
     started_at: i64,
     mixed_port: u16,
     ctrl_port: u16,
-    secret: String,
     mode: String,
     system_proxy: bool,
     system_proxy_actual: bool,
@@ -108,7 +142,6 @@ async fn get_status(state: State<'_, AppState>) -> Result<Status, String> {
         started_at,
         mixed_port: settings.mixed_port,
         ctrl_port: settings.ctrl_port,
-        secret: settings.secret.clone(),
         mode: settings.mode.clone(),
         system_proxy: settings.system_proxy,
         system_proxy_actual,
@@ -151,7 +184,15 @@ pub async fn apply_settings_patch(app: &AppHandle, patch: Value) -> Result<Setti
         serde_json::from_value(base).map_err(err)?
     };
 
+    let captured_proxy = if merged.system_proxy && !before.system_proxy {
+        sysproxy_win::snapshot()
+    } else {
+        before.proxy_snapshot.clone()
+    };
     *state.settings.lock().unwrap() = merged.clone();
+    if captured_proxy.is_some() {
+        state.settings.lock().unwrap().proxy_snapshot = captured_proxy;
+    }
     state.save_settings();
 
     let needs_restart = merged.mixed_port != before.mixed_port
@@ -173,12 +214,28 @@ pub async fn apply_settings_patch(app: &AppHandle, patch: Value) -> Result<Setti
     if merged.system_proxy != before.system_proxy
         || (merged.system_proxy && merged.mixed_port != before.mixed_port)
     {
-        sysproxy_win::apply(merged.system_proxy, merged.mixed_port, &merged.bypass).map_err(err)?;
+        if merged.system_proxy {
+            let listening = state.core.lock().unwrap().listening_port;
+            if !matches!(listening, Some(port) if port > 0) {
+                *state.settings.lock().unwrap() = before.clone();
+                state.save_settings();
+                return Err("内核代理端口尚未启动，无法打开系统代理".into());
+            }
+            sysproxy_win::apply(true, listening.unwrap(), &merged.bypass).map_err(err)?;
+        } else if sysproxy_win::is_ours(before.mixed_port) {
+            if let Some(snapshot) = before.proxy_snapshot.as_ref() {
+                sysproxy_win::restore(snapshot).map_err(err)?;
+            } else {
+                sysproxy_win::apply(false, before.mixed_port, &before.bypass).map_err(err)?;
+            }
+            state.settings.lock().unwrap().proxy_snapshot = None;
+        }
     }
 
-    let _ = app.emit("zephyr://settings", &merged);
+    let current = state.snapshot_settings();
+    let _ = app.emit("zephyr://settings", &current);
     tray::sync(app);
-    Ok(merged)
+    Ok(current)
 }
 
 // ---------------------------------------------------------------- core
@@ -208,6 +265,9 @@ fn resolve_ports(state: &State<'_, AppState>) -> (Settings, Option<(u16, u16)>) 
 }
 
 async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Result<(), String> {
+    let _restart_guard = state.restart_lock.lock().await;
+    let previous_settings = state.snapshot_settings();
+    let previous_runtime = std::fs::read(state.dirs.runtime.join("config.yaml")).ok();
     // Our own previous core holds the ports until it is fully gone. Stop it
     // before probing, or the probe mistakes it for another program and walks
     // the ports forward on every restart.
@@ -222,12 +282,21 @@ async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Res
     if let Some((from, to)) = moved {
         let _ = app.emit("zephyr://port-moved", serde_json::json!({ "from": from, "to": to }));
     }
-    let config = core::write_runtime_config(&state.dirs.runtime, &state.dirs.profiles, &settings)
-        .map_err(err)?;
+    let config = match core::write_runtime_config(&state.dirs.runtime, &state.dirs.profiles, &settings) {
+        Ok(config) => config,
+        Err(error) => {
+            restore_previous_core(app, state, &previous_settings, previous_runtime.as_deref()).await;
+            return Err(err(error));
+        }
+    };
 
-    {
+    let start_result = {
         let mut core = state.core.lock().unwrap();
-        core.start(app, &state.dirs.runtime, &config).map_err(err)?;
+        core.start(app, &state.dirs.runtime, &config)
+    };
+    if let Err(error) = start_result {
+        restore_previous_core(app, state, &previous_settings, previous_runtime.as_deref()).await;
+        return Err(err(error));
     }
 
     let client = Mihomo::new(settings.ctrl_port, &settings.secret);
@@ -252,10 +321,61 @@ async fn restart_core_inner(app: &AppHandle, state: &State<'_, AppState>) -> Res
     }
     let _ = app.emit("zephyr://core", ready);
 
-    if !ready {
+    if !ready || !matches!(listening, Some(port) if port > 0) {
+        restore_previous_core(app, state, &previous_settings, previous_runtime.as_deref()).await;
         return Err("内核启动后没有响应，请查看日志".into());
     }
     Ok(())
+}
+
+async fn restore_previous_core(
+    app: &AppHandle,
+    state: &State<'_, AppState>,
+    previous: &Settings,
+    runtime: Option<&[u8]>,
+) {
+    let current = state.snapshot_settings();
+    {
+        state.core.lock().unwrap().stop();
+    }
+    core::wait_ports_released(
+        &[current.mixed_port, current.ctrl_port],
+        std::time::Duration::from_secs(3),
+    )
+    .await;
+
+    *state.settings.lock().unwrap() = previous.clone();
+    state.save_settings();
+    if let Some(runtime) = runtime {
+        let _ = std::fs::write(state.dirs.runtime.join("config.yaml"), runtime);
+    }
+
+    let config = state.dirs.runtime.join("config.yaml");
+    let started = {
+        let mut core = state.core.lock().unwrap();
+        core.start(app, &state.dirs.runtime, &config)
+    };
+    if started.is_err() {
+        return;
+    }
+
+    let client = Mihomo::new(previous.ctrl_port, &previous.secret);
+    let ready = client.wait_ready(30).await;
+    let listening = if ready { client.mixed_port().await } else { None };
+    {
+        let mut core = state.core.lock().unwrap();
+        core.running = ready;
+        core.listening_port = listening;
+        core.last_error = if ready && matches!(listening, Some(port) if port > 0) {
+            None
+        } else {
+            Some("新配置启动失败，旧配置也未能恢复".into())
+        };
+    }
+    if previous.system_proxy && matches!(listening, Some(port) if port > 0) {
+        let _ = sysproxy_win::apply(true, previous.mixed_port, &previous.bypass);
+    }
+    let _ = app.emit("zephyr://core", ready);
 }
 
 #[tauri::command]
@@ -529,13 +649,23 @@ fn spawn_log_bridge(app: AppHandle) {
                     format!("ws://127.0.0.1:{}/logs?level=info", port).into_client_request().ok()?;
                 let value = format!("Bearer {}", secret).parse().ok()?;
                 request.headers_mut().insert("Authorization", value);
-                tokio_tungstenite::connect_async(request).await.ok()
+                tokio::time::timeout(
+                    std::time::Duration::from_secs(5),
+                    tokio_tungstenite::connect_async(request),
+                )
+                .await
+                .ok()?
+                .ok()
             }
             .await;
 
             if let Some((stream, _)) = connected {
                 let (_, mut read) = stream.split();
-                while let Some(Ok(message)) = read.next().await {
+                while let Ok(Some(Ok(message))) = tokio::time::timeout(
+                    std::time::Duration::from_secs(6),
+                    read.next(),
+                )
+                .await {
                     if let Ok(text) = message.into_text() {
                         if text.trim().is_empty() {
                             continue;
@@ -598,6 +728,7 @@ pub fn run() {
                 settings: Mutex::new(settings),
                 profiles: Mutex::new(profile_list),
                 core: Mutex::new(CoreManager::default()),
+                restart_lock: AsyncMutex::new(()),
             });
 
             // Tray icon and menu. Must come after the state is managed, since
@@ -717,8 +848,12 @@ pub fn run() {
             if let tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit = event {
                 let state = app.state::<AppState>();
                 let settings = state.settings.lock().unwrap().clone();
-                if settings.system_proxy {
-                    let _ = sysproxy_win::apply(false, settings.mixed_port, &settings.bypass);
+                if settings.system_proxy && sysproxy_win::is_ours(settings.mixed_port) {
+                    if let Some(snapshot) = settings.proxy_snapshot.as_ref() {
+                        let _ = sysproxy_win::restore(snapshot);
+                    } else {
+                        let _ = sysproxy_win::apply(false, settings.mixed_port, &settings.bypass);
+                    }
                 }
                 state.core.lock().unwrap().stop();
             }

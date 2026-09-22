@@ -74,12 +74,8 @@ impl Mihomo {
     /// already taken, which is the only way to tell that the proxy is dead.
     pub async fn mixed_port(&self) -> Option<u16> {
         let configs = self.configs().await.ok()?;
-        for key in ["mixed-port", "port", "socks-port"] {
-            if let Some(port) = configs.get(key).and_then(|v| v.as_u64()) {
-                if port > 0 {
-                    return Some(port as u16);
-                }
-            }
+        if let Some(port) = configs.get("mixed-port").and_then(|v| v.as_u64()) {
+            return Some(port as u16);
         }
         Some(0)
     }
@@ -139,7 +135,7 @@ impl Mihomo {
             .bearer_auth(&self.secret)
             .send()
             .await?;
-        Ok(resp.json().await.unwrap_or(Value::Null))
+        Ok(resp.error_for_status()?.json().await?)
     }
 
     /// Switch rule / global / direct without restarting the core.
@@ -157,20 +153,20 @@ impl Mihomo {
     }
 
     pub async fn close_connection(&self, id: &str) -> Result<()> {
-        let _ = Self::client(5)?
+        Self::client(5)?
             .delete(format!("{}/connections/{}", self.base, urlencode(id)))
             .bearer_auth(&self.secret)
             .send()
-            .await?;
+            .await?.error_for_status()?;
         Ok(())
     }
 
     pub async fn close_all_connections(&self) -> Result<()> {
-        let _ = Self::client(5)?
+        Self::client(5)?
             .delete(format!("{}/connections", self.base))
             .bearer_auth(&self.secret)
             .send()
-            .await?;
+            .await?.error_for_status()?;
         Ok(())
     }
 
